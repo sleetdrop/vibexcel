@@ -22,7 +22,7 @@ All projects are designed to run directly inside Excel without scripting support
 
 | Project           | Description                                                             |
 |-------------------|-------------------------------------------------------------------------|
-| [Hanoi](./hanoi/) | Tower of Hanoi step-by-step animation demo built entirely with formulas |
+| [Hanoi](/Hanoi/README.md) | Tower of Hanoi step-by-step animation demo built entirely with formulas |
 
 ## Requirements
 
