@@ -523,10 +523,10 @@ Run:
 
 ```bash
 unzip -t Sudoku/sudoku.xlsx
-unzip -l Sudoku/sudoku.xlsx | rg "vbaProject|externalLinks|connections|customXml"
+if unzip -l Sudoku/sudoku.xlsx | rg "vbaProject|externalLinks|connections|customXml"; then exit 1; fi
 ```
 
-Expected: ZIP validation reports no errors; the second command has no matches. Treat its no-match exit code as success.
+Expected: ZIP validation reports no errors; the forbidden-part scan has no matches and the compound command exits successfully.
 
 - [ ] **Step 3: Recheck workbook runtime facts in Excel**
 
@@ -561,7 +561,7 @@ Read the three Sudoku documentation surfaces together and confirm that version, 
 
 - [ ] **Step 5: Perform final visual inspection**
 
-View `Sudoku/Preview.png` at original resolution and at approximately 900 pixels wide. Confirm the board, dashboard, Coach controls, candidates, and Quick Guide remain legible and no Excel chrome is visible.
+View `Sudoku/Preview.png` at original resolution and at approximately 700 pixels wide. Confirm the board, dashboard, Coach controls, candidates, and Quick Guide remain legible and no Excel chrome is visible.
 
 - [ ] **Step 6: Confirm public commit scope**
 
@@ -580,6 +580,26 @@ Expected:
 - all intended Sudoku docs, preview, workbook, extractor, tests, and root README are tracked;
 - no unrelated file is staged.
 
-- [ ] **Step 7: Record the release checkpoint**
+- [ ] **Step 7: Remove internal planning artifacts from the public tree**
+
+After all implementation facts have been verified, remove the four files created only to coordinate this development process:
+
+```text
+docs/superpowers/specs/2026-07-27-sudoku-release-polish-design.md
+docs/superpowers/plans/2026-07-27-sudoku-release-polish.md
+docs/superpowers/specs/2026-07-28-sudoku-documentation-design.md
+docs/superpowers/plans/2026-07-28-sudoku-documentation.md
+```
+
+Delete them with `apply_patch`, confirm `rg --files docs/superpowers` returns no files, and commit:
+
+```bash
+git add -u docs/superpowers
+git commit -m "chore: remove internal planning artifacts"
+```
+
+The files remain recoverable from Git history but do not appear in the public repository tree.
+
+- [ ] **Step 8: Record the release checkpoint**
 
 If verification required no repair commit, do not create an empty commit. Record the verified HEAD commit and workbook SHA-256 in the implementation handoff, then transition to the separate Hanoi review/design cycle.
