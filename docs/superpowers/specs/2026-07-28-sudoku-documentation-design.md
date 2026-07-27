@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-28
 
-**Status:** Approved direction; written specification pending final review
+**Status:** Approved
 
 ## Goal
 
