@@ -210,10 +210,10 @@ Run:
 
 ```bash
 rg -n '^## `SDK_(Candidates|CoachHintV2|PlayerHint|Solve|CountSolutions|Uniqueness)`' Sudoku/NAMED_FORMULAS.md
-rg -n '_xlfn\.|_xlpm\.' Sudoku/NAMED_FORMULAS.md
+if awk '/^```excel$/{inside=1;next} /^```$/{inside=0} inside' Sudoku/NAMED_FORMULAS.md | rg '_xlfn\.|_xlpm\.'; then exit 1; fi
 ```
 
-Expected: six section matches; no storage-only prefix matches.
+Expected: six section matches; no storage-only prefix matches inside formula code blocks. The generated warning intentionally names both prefixes.
 
 - [ ] **Step 6: Commit the generated snapshot**
 
