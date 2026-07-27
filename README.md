@@ -1,36 +1,37 @@
 # vibexcel
 
-AI-assisted experimental Excel toy projects built with formulas only.
+AI-assisted experiments at the capability boundary between modern Excel formulas and interactive software.
 
 No VBA. No macros. No Office Scripts. No external runtimes.
 
 ## About
 
-`vibexcel` explores the creative and technical boundaries of modern Excel formulas.
+`vibexcel` explores what AI agents and modern Excel formulas can build together. Each project is a self-contained workbook: executable artifact, interface, formula source, and portable notebook in one file.
 
 The projects in this repository focus on:
 
 - formula-only implementations
 - interactive spreadsheet systems
 - algorithm visualization
-- simulations and puzzle mechanics
+- puzzles and simulations
 - modern Excel formula capabilities
+- inspectable formula architecture and executable regression contracts
 
-All projects are designed to run directly inside Excel without scripting support.
+All runtime behavior stays inside Excel without scripting support.
 
 ## Projects
 
-| Project           | Description                                                             |
-|-------------------|-------------------------------------------------------------------------|
-| [Hanoi](/Hanoi/README.md) | Tower of Hanoi step-by-step animation demo built entirely with formulas |
+| Project | Description | Workbook |
+|---|---|---|
+| [Sudoku](Sudoku/README.md) | A five-difficulty Sudoku game with live candidates, logical coaching, recursive verification, uniqueness certification, and regression tests—implemented with formulas only. | [Download](Sudoku/sudoku.xlsx) |
+| [Hanoi](Hanoi/README.md) | A Tower of Hanoi step-by-step visualization implemented with formulas only. | [Download](Hanoi/Hanoi-1.0.xlsx) |
 
 ## Requirements
 
-Most projects require:
+Projects use modern dynamic-array formulas such as `LET`, `LAMBDA`, `SCAN`, and `REDUCE`. Exact requirements are documented per project.
 
-- Microsoft Excel with modern formula support
-- Dynamic array functions (`LET`, `LAMBDA`, `SCAN`, `REDUCE`, etc.)
+Sudoku v1.0.0 is verified on Microsoft Excel 365 Desktop. Excel 2024 and Excel for Web remain unverified for that release.
 
 ## License
 
-MIT License
+[MIT License](LICENSE)
