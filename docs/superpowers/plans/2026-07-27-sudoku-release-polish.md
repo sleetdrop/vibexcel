@@ -4,7 +4,7 @@
 
 **Goal:** Remove the five game pages' Quick Guide rendering defect, add concise public-release information to the workbook README, and prove that the formula-only game still passes functional and visual regression checks.
 
-**Architecture:** Keep the existing board, dashboard, Coach, hidden engines, named formulas, and palette unchanged. Add formula-driven release contracts to `_Tests`, remove the obsolete `AM20` cell text that renders underneath each `QuickGuidePanel` shape, and extend the existing README with two style-matched sections using bounded existing rows.
+**Architecture:** Keep the existing board, dashboard, Coach, hidden engines, named formulas, and palette unchanged. Add one formula-driven regression contract for the Quick Guide defect, remove the obsolete `AM20` cell text that renders underneath each `QuickGuidePanel` shape, and extend the existing README with two style-matched sections using bounded existing rows. Human-facing README prose is verified by exact read-back and screenshots rather than brittle wording tests.
 
 **Tech Stack:** Microsoft Excel 365 Desktop; connected Excel session; ordinary cells, formulas, data validation, conditional formatting, dynamic arrays, named `LAMBDA` functions, and existing Excel shapes. No VBA, macros, Office Scripts, or external runtime behavior.
 
@@ -23,34 +23,34 @@
 
 ---
 
-### Task 1: Add failing release-polish contracts
+### Task 1: Add a failing Quick Guide regression contract
 
 **Files:**
-- Modify: `Sudoku/sudoku.xlsx`, sheet `_Tests`, range `A147:E151`
-- Test: `Sudoku/sudoku.xlsx`, sheet `_Tests`, cells `D148:E151`
+- Modify: `Sudoku/sudoku.xlsx`, sheet `_Tests`, range `A147:E148`
+- Test: `Sudoku/sudoku.xlsx`, sheet `_Tests`, cells `D148:E148`
 
 **Interfaces:**
 - Consumes: existing `_Tests!A141:E145` section and row formatting.
-- Produces: four formula-driven contracts that turn from `FAIL` to `PASS` as Tasks 2 and 3 land.
+- Produces: one formula-driven contract that turns from `FAIL` to `PASS` when Task 2 lands.
 
 - [ ] **Step 1: Reconfirm the connected target and inspect the source test block**
 
 Use `list_document_sessions(surface="excel")`, select the exact `sudoku.xlsx` session, fetch the `read_ranges`, `copy_range_to`, and `write_range` schemas, then read `_Tests!A141:E145`.
 
-Expected: row 141 is a green section header and rows 142–145 are ordinary `Expected / Actual / Result` test rows.
+Expected: row 141 is a green section header and row 142 is an ordinary `Expected / Actual / Result` test row.
 
 - [ ] **Step 2: Copy the existing five-row test pattern into the new release section**
 
 Use `copy_range_to` on `_Tests`:
 
 ```text
-sourceRange: A141:E145
-destinationRange: A147:E151
+sourceRange: A141:E142
+destinationRange: A147:E148
 ```
 
 Expected: the new rows inherit existing test typography, fills, borders, and formulas before their contents are replaced.
 
-- [ ] **Step 3: Write the four RED contracts**
+- [ ] **Step 3: Write the RED contract**
 
 Patch these cells with `write_range`:
 
@@ -62,37 +62,16 @@ B148 = No cell text can render underneath QuickGuidePanel
 C148 = TRUE
 D148 = =AND('01 Easy'!$AM$20="",'02 Medium'!$AM$20="",'03 Hard'!$AM$20="",'04 Expert'!$AM$20="",'05 Master'!$AM$20="")
 E148 = =IF(D148=C148,"PASS","FAIL")
-
-A149 = Release metadata is complete
-B149 = Version, build date, supported and unverified environments
-C149 = TRUE
-D149 = =AND('README'!$D$54="1.0.0",TEXT('README'!$D$55,"yyyy-mm-dd")="2026-07-27",'README'!$D$56="Microsoft Excel 365 Desktop",ISNUMBER(SEARCH("unverified",'README'!$D$57)))
-E149 = =IF(D149=C149,"PASS","FAIL")
-
-A150 = Reset and Verify performance are documented
-B150 = Public instructions explain recovery and expected search latency
-C150 = TRUE
-D150 = =AND(ISNUMBER(SEARCH("reopen a clean copy",'README'!$D$58)),ISNUMBER(SEARCH("several seconds",'README'!$D$59)),ISNUMBER(SEARCH("substantially longer",'README'!$D$59)))
-E150 = =IF(D150=C150,"PASS","FAIL")
-
-A151 = Project rationale is visible near the top
-B151 = README explains the stateful formula-only experiment
-C151 = TRUE
-D151 = =AND(ISNUMBER(SEARCH("stateful",'README'!$A$11)),ISNUMBER(SEARCH("formulas",'README'!$A$11)))
-E151 = =IF(D151=C151,"PASS","FAIL")
 ```
 
 - [ ] **Step 4: Read the new test results and confirm the RED state**
 
-Read `_Tests!A147:E151`.
+Read `_Tests!A147:E148`.
 
 Expected before implementation:
 
 ```text
 E148 = FAIL
-E149 = FAIL
-E150 = FAIL
-E151 = FAIL
 ```
 
 If any test is already `PASS`, inspect its actual referenced cells and correct only an erroneous test assumption; do not weaken the contract.
@@ -162,7 +141,7 @@ If text remains clipped inside the shape, stop and inspect `QuickGuidePanel` wid
 
 **Files:**
 - Modify: `Sudoku/sudoku.xlsx`, sheet `README`, ranges `A10:J11`, `A18:J18`, `D42`, and `A53:J59`
-- Test: `Sudoku/sudoku.xlsx`, `_Tests!D149:E151`
+- Content verification: exact read-back of `README!A10:J11`, `README!A18:J18`, `README!A42:J42`, and `README!A53:J59`
 - Visual test: `README!A1:J59`
 
 **Interfaces:**
@@ -241,15 +220,12 @@ Do not autofit the sheet or change column widths.
 
 - [ ] **Step 5: Read the new content and confirm the GREEN state**
 
-Read `README!A10:J11`, `README!A18:J18`, `README!A42:J42`, `README!A53:J59`, and `_Tests!A147:E151`.
+Read `README!A10:J11`, `README!A18:J18`, `README!A42:J42`, and `README!A53:J59`.
 
 Expected:
 
 ```text
-E148 = PASS
-E149 = PASS
-E150 = PASS
-E151 = PASS
+All written labels, values, the typed build date, and the approved instructions match the Step 3 content exactly.
 ```
 
 - [ ] **Step 6: Verify README visually**
@@ -286,7 +262,7 @@ Expected:
 
 ```text
 No FAIL results.
-At least 84 PASS results after adding four release contracts.
+At least 81 PASS results after adding the Quick Guide regression contract.
 Existing on-demand tests may remain SKIP while Verify is Off.
 ```
 
@@ -354,4 +330,3 @@ git commit -m "feat: polish Sudoku workbook for release"
 ```
 
 Expected: only `Sudoku/sudoku.xlsx` is included in this implementation commit; the Excel lock file remains untracked and excluded.
-
