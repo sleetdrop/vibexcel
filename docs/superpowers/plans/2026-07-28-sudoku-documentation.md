@@ -282,7 +282,7 @@ file Sudoku/Preview.png
 sips -g pixelWidth -g pixelHeight Sudoku/Preview.png
 ```
 
-Expected: a valid PNG with width at least 1000 pixels and a landscape aspect ratio.
+Expected: a valid PNG with width at least 700 pixels and a landscape aspect ratio. The connected Excel range-image API currently returns this range at 760×538; do not upscale it merely to inflate pixel dimensions.
 
 - [ ] **Step 5: Commit the preview**
 
