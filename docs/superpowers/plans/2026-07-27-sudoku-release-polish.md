@@ -262,7 +262,7 @@ Expected:
 
 ```text
 No FAIL results.
-At least 81 PASS results after adding the Quick Guide regression contract.
+79 PASS results and 18 SKIP/on-demand checks: two obsolete cell-text checks were intentionally converted to screenshot gates, and one new spill-through regression contract was added.
 Existing on-demand tests may remain SKIP while Verify is Off.
 ```
 
