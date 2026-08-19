@@ -243,7 +243,7 @@ Use wrapped text, readable row heights, no clipped content, and no personal emai
 Change `Stage!A13` from `Display Mode` to `Input Status`. Set `Stage!B13` to:
 
 ```excel
-=LET(d,HN_CLAMP_DISKS($B$5),s,HN_EFFECTIVE_STEP($B$6,HN_MAX_STEP(d)),IF(AND($B$5=d,$B$6=s),"Inputs valid","Display adjusted to "&d&" disks / step "&s))
+=LET(d,HN_CLAMP_DISKS($B$5),s,HN_EFFECTIVE_STEP($B$6,HN_MAX_STEP(d)),IF(IFERROR(AND($B$5=d,$B$6=s),FALSE),"Inputs valid","Display adjusted to "&d&" disks / step "&s))
 ```
 
 Keep the existing information strip below the motion stage, but update it to point readers to `Guide` for instructions and to explain that pasted invalid values are adjusted for display.
@@ -528,7 +528,7 @@ LABS_GENERATIVEAI
 wa200010215
 wa200003696
 Sheet2
-sleepdrop@gmail.com
+personal email addresses
 ```
 
 Expected: zero matches in package paths and extracted XML/text.
