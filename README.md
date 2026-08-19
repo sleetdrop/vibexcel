@@ -24,7 +24,7 @@ All runtime behavior stays inside Excel without scripting support.
 | Project | Description | Workbook |
 |---|---|---|
 | [Sudoku](Sudoku/README.md) | A five-difficulty Sudoku game with live candidates, logical coaching, recursive verification, uniqueness certification, and regression tests—implemented with formulas only. | [Download](Sudoku/sudoku.xlsx) |
-| [Hanoi](Hanoi/README.md) | A Tower of Hanoi step-by-step visualization implemented with formulas only. | [Download](Hanoi/Hanoi-1.0.xlsx) |
+| [Hanoi](Hanoi/README.md) | A step-by-step Tower of Hanoi visualization implemented with formulas only. | [Download](Hanoi/hanoi.xlsx) |
 
 ## Requirements
 
