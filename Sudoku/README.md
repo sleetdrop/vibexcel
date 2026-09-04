@@ -4,7 +4,7 @@ A playable, five-difficulty Sudoku workbook built entirely with modern Excel for
 
 The workbook was developed through collaboration between an AI agent and Excel's formula system. The interesting part is not merely solving Sudoku, but exploring how far a spreadsheet can behave like a self-contained interactive program while remaining inspectable as an Excel notebook.
 
-[Download the workbook](sudoku.xlsx)
+[Download the workbook](https://raw.githubusercontent.com/sleetdrop/vibexcel/main/Sudoku/sudoku.xlsx)
 
 ## Preview
 
@@ -31,11 +31,12 @@ The workbook also carries its own documentation. Its `README` sheet explains how
 
 ## Quick Start
 
-1. Open [sudoku.xlsx](sudoku.xlsx) in Microsoft Excel 365 Desktop.
-2. Start on `01 Easy`, or choose another numbered difficulty sheet.
-3. Enter a digit from 1 to 9 in a green-underlined center cell.
-4. Press Delete or Backspace to clear an answer.
-5. Watch candidates, remaining cells, conflicts, and game status update automatically.
+1. Download and open [sudoku.xlsx](https://raw.githubusercontent.com/sleetdrop/vibexcel/main/Sudoku/sudoku.xlsx) in Microsoft Excel 365 Desktop.
+2. If Excel opens the downloaded file read-only or in Protected View, enable editing.
+3. Start on `01 Easy`, or choose another numbered difficulty sheet.
+4. Enter a digit from 1 to 9 in a green-underlined center cell.
+5. Press Delete or Backspace to clear an answer.
+6. Watch candidates, remaining cells, conflicts, and game status update automatically.
 
 Gray centers are fixed clues. The workbook uses data validation to reject ordinary edits to them while keeping the implementation open for inspection.
 
@@ -70,9 +71,9 @@ For source review without opening the binary workbook, see the generated [Named 
 
 ## Compatibility and Performance
 
-Sudoku v1.0.0 is verified on **Microsoft Excel 365 Desktop** and depends on modern dynamic-array and LAMBDA functionality.
+Sudoku v1.0.0 is verified on **Microsoft Excel 365 Desktop for macOS** and depends on modern dynamic-array and LAMBDA functionality.
 
-**Excel 2024 and Excel for Web are currently unverified.** They may work, but this release does not claim support for them.
+**Excel 365 for Windows, Excel 2024, and Excel for the Web are currently unverified.** They may work, but this release does not claim support for them.
 
 Ordinary play uses fast local checks. **Verify** invokes global recursive search and may take several seconds. The Master puzzle can take substantially longer on slower computers. Return Verify to Off afterward so the recursive calculation gate becomes dormant again.
 
@@ -83,6 +84,7 @@ Ordinary play uses fast local checks. **Verify** invokes global recursive search
 - Release state: `79 checks passing · 18 on demand`
 - Published puzzles certified unique: `5 / 5`
 - Named LAMBDA functions: `51 SDK_*` names
+- Package hygiene verified: `2026-09-04` (no embedded Office add-in or Web Extension parts)
 
 The on-demand group includes expensive checks and visual contracts that are not continuously evaluated during ordinary play. The workbook opens with empty player entries, Coach Off, zero conflicts, candidates Auto, and every puzzle In Progress.
 

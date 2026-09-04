@@ -10,7 +10,7 @@ The preview shows four disks at step 7, with the current move, progress, dot-mat
 
 ## Try It / Download
 
-[Download the workbook](hanoi.xlsx), open it in Microsoft Excel, and use the controls on `Stage`.
+[Download the workbook](https://raw.githubusercontent.com/sleetdrop/vibexcel/main/Hanoi/hanoi.xlsx), open it in Microsoft Excel, and use the controls on `Stage`. If Excel opens the downloaded file read-only or in Protected View, enable editing.
 
 ## Quick Start
 
@@ -39,10 +39,12 @@ If a value is pasted outside the supported range, the workbook shows the safe ef
 
 The raw controls on `Stage` are normalized by input-constraint formulas. Solver formulas produce the full legal move sequence and disk positions. Lookup and query helpers select the active state, and display helpers turn that state into the title, status, progress, keyframes, and dot-matrix stage. The compact checks on `Engine` verify the expected step count, one-disk transitions, distinct move endpoints, and the final all-on-C state.
 
+See [Formula architecture](ARCHITECTURE.md) for the data flow, stable worksheet contracts, named-LAMBDA groups, display model, and verification boundary.
+
 ## Requirements and Compatibility
 
-- Verified: Microsoft Excel 365 Desktop
-- Unverified: Microsoft Excel 2024 and Excel for the Web
+- Verified: Microsoft Excel 365 Desktop for macOS
+- Unverified: Excel 365 for Windows, Microsoft Excel 2024, and Excel for the Web
 - Requires modern dynamic-array and named-`LAMBDA` formula support
 - Contains no VBA, macros, Office Scripts, custom functions, external data connections, or external workbook links
 

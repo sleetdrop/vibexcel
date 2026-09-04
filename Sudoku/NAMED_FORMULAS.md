@@ -4,8 +4,8 @@ Generated file — do not edit manually. The Excel workbook is the canonical exe
 
 - Workbook: `sudoku.xlsx`
 - Workbook version: `1.0.0`
-- Workbook SHA-256: `9ed530cd79df2fb73c90a1441676cdf4548df8fbd217d500bb17fc6dbf4316c3`
-- Extraction date: `2026-07-28`
+- Workbook SHA-256: `31ff54ed2df2d2e866e6d3307c131e6fce2e871d3cf5cee2f3f26194797eb652`
+- Extraction date: `2026-09-04`
 - Formula count: `51`
 
 ## `SDK_BasicHint`

@@ -1,0 +1,6 @@
+# Microsoft Office lock files
+~$*.xlsx
+
+# Python bytecode and test caches
+__pycache__/
+*.py[cod]
