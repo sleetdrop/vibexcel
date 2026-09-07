@@ -4,8 +4,8 @@ Generated file — do not edit manually. The Excel workbook is the canonical exe
 
 - Workbook: `sudoku.xlsx`
 - Workbook version: `1.0.0`
-- Workbook SHA-256: `31ff54ed2df2d2e866e6d3307c131e6fce2e871d3cf5cee2f3f26194797eb652`
-- Extraction date: `2026-09-04`
+- Workbook SHA-256: `f69c6b84f19eb46334167b1729cee1e844e225eaf3a150b00a58eb1d7272125a`
+- Extraction date: `2026-09-08`
 - Formula count: `51`
 
 ## `SDK_BasicHint`
@@ -49,7 +49,7 @@ Returns legal digits for one square using row, column, and box exclusion; preser
 ## `SDK_CoachTraceV2`
 
 ```excel
-=LAMBDA(board,LET(hintText,SDK_CoachHintV2(board),parts,TEXTSPLIT(hintText," · "),partCount,COLUMNS(parts),lineOne,IF(partCount>1,"Technique — "&INDEX(parts,1,1)&" | Pattern — "&INDEX(parts,1,2),"Status — "&INDEX(parts,1,1)),lineTwo,IF(partCount>2,"Action — "&TEXTJOIN(" · ",TRUE,DROP(parts,,2)),"Action — No further supported elimination."),VSTACK(lineOne,lineTwo)))
+=LAMBDA(board,LET(hintText,TEXTJOIN("",TRUE,SDK_CoachHintV2(board)),parts,TEXTSPLIT(hintText," · "),partCount,COLUMNS(parts),lineOne,IF(partCount>1,"Technique — "&INDEX(parts,1,1)&" | Pattern — "&INDEX(parts,1,2),"Status — "&INDEX(parts,1,1)),lineTwo,IF(partCount>2,"Action — "&TEXTJOIN(" · ",TRUE,DROP(parts,,2)),"Action — No further supported elimination."),VSTACK(lineOne,lineTwo)))
 ```
 
 ## `SDK_Conflict`
@@ -177,13 +177,13 @@ Experimental Boolean wrapper around SDK_Solve. Not yet connected to live game pa
 ## `SDK_HintClaimingCol`
 
 ```excel
-=LAMBDA(board,LET(c,SDK_CandidateMatrix(board),REDUCE("",SEQUENCE(81),LAMBDA(acc,i,IF(acc<>"",acc,LET(k,QUOTIENT(i-1,9)+1,d,MOD(i-1,9)+1,v,INDEX(c,0,k),m,ISNUMBER(SEARCH(d&"",v&"")),n,SUM(--m),rs,_xlws.FILTER(SEQUENCE(9),m,""),bands,1+QUOTIENT(rs-1,3),one,IF(n>1,MIN(bands)=MAX(bands),FALSE),band,IF(one,INDEX(bands,1,1),1),br,1+3*(band-1),bc,1+3*QUOTIENT(k-1,3),sub,INDEX(c,SEQUENCE(3,,br),SEQUENCE(,3,bc)),rr,MAKEARRAY(3,3,LAMBDA(x,y,br+x-1)),cc,MAKEARRAY(3,3,LAMBDA(x,y,bc+y-1)),tm,IF(one,(cc<>k)*ISNUMBER(SEARCH(d&"",sub&"")),FALSE),targets,_xlws.FILTER("R"&TOCOL(rr)&"C"&TOCOL(cc),TOCOL(tm),""),txt,TEXTJOIN(", ",TRUE,targets),b,3*(band-1)+1+QUOTIENT(k-1,3),IF(txt<>"","Claiming column · Column "&k&" confines digit "&d&" to box "&b&" · Remove "&d&" from "&txt&".","")))))))
+=LAMBDA(board,LET(c,SDK_CandidateMatrix(board),REDUCE("",SEQUENCE(81),LAMBDA(acc,i,IF(acc<>"",acc,LET(k,QUOTIENT(i-1,9)+1,d,MOD(i-1,9)+1,v,INDEX(c,0,k),m,ISNUMBER(SEARCH(d&"",v&"")),n,SUM(--m),rs,_xlws.FILTER(SEQUENCE(9),m,""),bands,1+QUOTIENT(rs-1,3),one,IF(n>1,MIN(bands)=MAX(bands),FALSE),band,IF(one,INDEX(bands,1,1),1),br,1+3*(band-1),bc,1+3*QUOTIENT(k-1,3),sub,INDEX(c,SEQUENCE(3,,br),SEQUENCE(,3,bc)),rr,MAKEARRAY(3,3,LAMBDA(x,y,br+x-1)),cc,MAKEARRAY(3,3,LAMBDA(x,y,bc+y-1)),tm,IF(one,(cc<>k)*ISNUMBER(SEARCH(d&"",sub&"")),FALSE),targets,_xlws.FILTER("R"&TOCOL(rr)&"C"&TOCOL(cc),TOCOL(tm),""),txt,TEXTJOIN(", ",TRUE,targets),sourceText,TEXTJOIN(", ",TRUE,"R"&rs&"C"&k),b,3*(band-1)+1+QUOTIENT(k-1,3),IF(txt<>"","Claiming column · Column "&k&" confines digit "&d&" to box "&b&" via "&sourceText&" · Remove "&d&" from "&txt&".","")))))))
 ```
 
 ## `SDK_HintClaimingRow`
 
 ```excel
-=LAMBDA(board,LET(c,SDK_CandidateMatrix(board),REDUCE("",SEQUENCE(81),LAMBDA(acc,i,IF(acc<>"",acc,LET(r,QUOTIENT(i-1,9)+1,d,MOD(i-1,9)+1,v,INDEX(c,r,0),m,ISNUMBER(SEARCH(d&"",v&"")),n,SUM(--m),cs,_xlws.FILTER(SEQUENCE(,9),m,""),bands,1+QUOTIENT(cs-1,3),one,IF(n>1,MIN(bands)=MAX(bands),FALSE),band,IF(one,INDEX(bands,1,1),1),br,1+3*QUOTIENT(r-1,3),bc,1+3*(band-1),sub,INDEX(c,SEQUENCE(3,,br),SEQUENCE(,3,bc)),rr,MAKEARRAY(3,3,LAMBDA(x,y,br+x-1)),cc,MAKEARRAY(3,3,LAMBDA(x,y,bc+y-1)),tm,IF(one,(rr<>r)*ISNUMBER(SEARCH(d&"",sub&"")),FALSE),targets,_xlws.FILTER("R"&TOCOL(rr)&"C"&TOCOL(cc),TOCOL(tm),""),txt,TEXTJOIN(", ",TRUE,targets),b,3*QUOTIENT(r-1,3)+band,IF(txt<>"","Claiming row · Row "&r&" confines digit "&d&" to box "&b&" · Remove "&d&" from "&txt&".","")))))))
+=LAMBDA(board,LET(c,SDK_CandidateMatrix(board),REDUCE("",SEQUENCE(81),LAMBDA(acc,i,IF(acc<>"",acc,LET(r,QUOTIENT(i-1,9)+1,d,MOD(i-1,9)+1,v,INDEX(c,r,0),m,ISNUMBER(SEARCH(d&"",v&"")),n,SUM(--m),cs,_xlws.FILTER(SEQUENCE(,9),m,""),bands,1+QUOTIENT(cs-1,3),one,IF(n>1,MIN(bands)=MAX(bands),FALSE),band,IF(one,INDEX(bands,1,1),1),br,1+3*QUOTIENT(r-1,3),bc,1+3*(band-1),sub,INDEX(c,SEQUENCE(3,,br),SEQUENCE(,3,bc)),rr,MAKEARRAY(3,3,LAMBDA(x,y,br+x-1)),cc,MAKEARRAY(3,3,LAMBDA(x,y,bc+y-1)),tm,IF(one,(rr<>r)*ISNUMBER(SEARCH(d&"",sub&"")),FALSE),targets,_xlws.FILTER("R"&TOCOL(rr)&"C"&TOCOL(cc),TOCOL(tm),""),txt,TEXTJOIN(", ",TRUE,targets),sourceText,TEXTJOIN(", ",TRUE,"R"&r&"C"&cs),b,3*QUOTIENT(r-1,3)+band,IF(txt<>"","Claiming row · Row "&r&" confines digit "&d&" to box "&b&" via "&sourceText&" · Remove "&d&" from "&txt&".","")))))))
 ```
 
 ## `SDK_HintHiddenBox`
@@ -279,13 +279,13 @@ Experimental Boolean wrapper around SDK_Solve. Not yet connected to live game pa
 ## `SDK_PlayerTrace`
 
 ```excel
-=LAMBDA(board,solution,LET(hintText,SDK_PlayerHint(board,solution),parts,TEXTSPLIT(hintText," · "),partCount,COLUMNS(parts),lineOne,IF(partCount>1,"Technique — "&INDEX(parts,1,1)&" | Pattern — "&INDEX(parts,1,2),"Status — "&INDEX(parts,1,1)),lineTwo,IF(partCount>2,"Action — "&TEXTJOIN(" · ",TRUE,DROP(parts,,2)),"Action — No further supported step."),VSTACK(lineOne,lineTwo)))
+=LAMBDA(board,solution,LET(hintText,TEXTJOIN("",TRUE,SDK_PlayerHint(board,solution)),parts,TEXTSPLIT(hintText," · "),partCount,COLUMNS(parts),lineOne,IF(partCount>1,"Technique — "&INDEX(parts,1,1)&" | Pattern — "&INDEX(parts,1,2),"Status — "&INDEX(parts,1,1)),lineTwo,IF(partCount>2,"Action — "&TEXTJOIN(" · ",TRUE,DROP(parts,,2)),"Action — No further supported step."),VSTACK(lineOne,lineTwo)))
 ```
 
 ## `SDK_PointingColHint`
 
 ```excel
-=LAMBDA(board,LET(candMatrix,SDK_CandidateMatrix(board),REDUCE("",SEQUENCE(81),LAMBDA(foundHint,scanIndex,IF(foundHint<>"",foundHint,LET(boxNum,QUOTIENT(scanIndex-1,9)+1,digitNum,MOD(scanIndex-1,9)+1,boxStartRow,1+3*QUOTIENT(boxNum-1,3),boxStartCol,1+3*MOD(boxNum-1,3),boxCandidates,INDEX(candMatrix,SEQUENCE(3,,boxStartRow),SEQUENCE(,3,boxStartCol)),candidateMask,ISNUMBER(SEARCH(digitNum&"",boxCandidates&"")),candidateCount,SUM(--candidateMask),colCoordinates,TOCOL(MAKEARRAY(3,3,LAMBDA(rowOffset,colOffset,boxStartCol+colOffset-1))),candidateCols,_xlws.FILTER(colCoordinates,TOCOL(candidateMask),""),singleCol,IF(candidateCount>1,MIN(candidateCols)=MAX(candidateCols),FALSE),targetCol,IF(singleCol,INDEX(candidateCols,1),1),colCandidates,CHOOSECOLS(candMatrix,targetCol)&"",rowNumbers,SEQUENCE(9),outsideMask,((rowNumbers<boxStartRow)+(rowNumbers>boxStartRow+2))>0,containsMask,ISNUMBER(SEARCH(digitNum&"",colCandidates)),targetCells,_xlws.FILTER("R"&rowNumbers&"C"&targetCol,outsideMask*containsMask,""),targetText,TEXTJOIN(", ",TRUE,targetCells),IF(AND(singleCol,targetText<>""),"Pointing column · Box "&boxNum&" confines digit "&digitNum&" to column "&targetCol&" · Remove "&digitNum&" from "&targetText&".","")))))))
+=LAMBDA(board,LET(candMatrix,SDK_CandidateMatrix(board),REDUCE("",SEQUENCE(81),LAMBDA(foundHint,scanIndex,IF(foundHint<>"",foundHint,LET(boxNum,QUOTIENT(scanIndex-1,9)+1,digitNum,MOD(scanIndex-1,9)+1,boxStartRow,1+3*QUOTIENT(boxNum-1,3),boxStartCol,1+3*MOD(boxNum-1,3),boxCandidates,INDEX(candMatrix,SEQUENCE(3,,boxStartRow),SEQUENCE(,3,boxStartCol)),candidateMask,ISNUMBER(SEARCH(digitNum&"",boxCandidates&"")),candidateCount,SUM(--candidateMask),rowCoordinates,TOCOL(MAKEARRAY(3,3,LAMBDA(rowOffset,colOffset,boxStartRow+rowOffset-1))),colCoordinates,TOCOL(MAKEARRAY(3,3,LAMBDA(rowOffset,colOffset,boxStartCol+colOffset-1))),candidateCols,_xlws.FILTER(colCoordinates,TOCOL(candidateMask),""),sourceCells,_xlws.FILTER("R"&rowCoordinates&"C"&colCoordinates,TOCOL(candidateMask),""),sourceText,TEXTJOIN(", ",TRUE,sourceCells),singleCol,IF(candidateCount>1,MIN(candidateCols)=MAX(candidateCols),FALSE),targetCol,IF(singleCol,INDEX(candidateCols,1),1),colCandidates,CHOOSECOLS(candMatrix,targetCol)&"",rowNumbers,SEQUENCE(9),outsideMask,((rowNumbers<boxStartRow)+(rowNumbers>boxStartRow+2))>0,containsMask,ISNUMBER(SEARCH(digitNum&"",colCandidates)),targetCells,_xlws.FILTER("R"&rowNumbers&"C"&targetCol,outsideMask*containsMask,""),targetText,TEXTJOIN(", ",TRUE,targetCells),IF(AND(singleCol,targetText<>""),"Pointing column · Box "&boxNum&" confines digit "&digitNum&" to column "&targetCol&" via "&sourceText&" · Remove "&digitNum&" from "&targetText&".","")))))))
 ```
 
 ## `SDK_PointingHint`
@@ -297,7 +297,7 @@ Experimental Boolean wrapper around SDK_Solve. Not yet connected to live game pa
 ## `SDK_PointingRowHint`
 
 ```excel
-=LAMBDA(board,LET(candMatrix,SDK_CandidateMatrix(board),REDUCE("",SEQUENCE(81),LAMBDA(foundHint,scanIndex,IF(foundHint<>"",foundHint,LET(boxNum,QUOTIENT(scanIndex-1,9)+1,digitNum,MOD(scanIndex-1,9)+1,boxStartRow,1+3*QUOTIENT(boxNum-1,3),boxStartCol,1+3*MOD(boxNum-1,3),boxCandidates,INDEX(candMatrix,SEQUENCE(3,,boxStartRow),SEQUENCE(,3,boxStartCol)),candidateMask,ISNUMBER(SEARCH(digitNum&"",boxCandidates&"")),candidateCount,SUM(--candidateMask),rowCoordinates,TOCOL(MAKEARRAY(3,3,LAMBDA(rowOffset,colOffset,boxStartRow+rowOffset-1))),candidateRows,_xlws.FILTER(rowCoordinates,TOCOL(candidateMask),""),singleRow,IF(candidateCount>1,MIN(candidateRows)=MAX(candidateRows),FALSE),targetRow,IF(singleRow,INDEX(candidateRows,1),1),rowCandidates,CHOOSEROWS(candMatrix,targetRow)&"",columnNumbers,SEQUENCE(,9),outsideMask,((columnNumbers<boxStartCol)+(columnNumbers>boxStartCol+2))>0,containsMask,ISNUMBER(SEARCH(digitNum&"",rowCandidates)),targetCells,_xlws.FILTER("R"&targetRow&"C"&columnNumbers,outsideMask*containsMask,""),targetText,TEXTJOIN(", ",TRUE,targetCells),IF(AND(singleRow,targetText<>""),"Pointing row · Box "&boxNum&" confines digit "&digitNum&" to row "&targetRow&" · Remove "&digitNum&" from "&targetText&".","")))))))
+=LAMBDA(board,LET(candMatrix,SDK_CandidateMatrix(board),REDUCE("",SEQUENCE(81),LAMBDA(foundHint,scanIndex,IF(foundHint<>"",foundHint,LET(boxNum,QUOTIENT(scanIndex-1,9)+1,digitNum,MOD(scanIndex-1,9)+1,boxStartRow,1+3*QUOTIENT(boxNum-1,3),boxStartCol,1+3*MOD(boxNum-1,3),boxCandidates,INDEX(candMatrix,SEQUENCE(3,,boxStartRow),SEQUENCE(,3,boxStartCol)),candidateMask,ISNUMBER(SEARCH(digitNum&"",boxCandidates&"")),candidateCount,SUM(--candidateMask),rowCoordinates,TOCOL(MAKEARRAY(3,3,LAMBDA(rowOffset,colOffset,boxStartRow+rowOffset-1))),colCoordinates,TOCOL(MAKEARRAY(3,3,LAMBDA(rowOffset,colOffset,boxStartCol+colOffset-1))),candidateRows,_xlws.FILTER(rowCoordinates,TOCOL(candidateMask),""),sourceCells,_xlws.FILTER("R"&rowCoordinates&"C"&colCoordinates,TOCOL(candidateMask),""),sourceText,TEXTJOIN(", ",TRUE,sourceCells),singleRow,IF(candidateCount>1,MIN(candidateRows)=MAX(candidateRows),FALSE),targetRow,IF(singleRow,INDEX(candidateRows,1),1),rowCandidates,CHOOSEROWS(candMatrix,targetRow)&"",columnNumbers,SEQUENCE(,9),outsideMask,((columnNumbers<boxStartCol)+(columnNumbers>boxStartCol+2))>0,containsMask,ISNUMBER(SEARCH(digitNum&"",rowCandidates)),targetCells,_xlws.FILTER("R"&targetRow&"C"&columnNumbers,outsideMask*containsMask,""),targetText,TEXTJOIN(", ",TRUE,targetCells),IF(AND(singleRow,targetText<>""),"Pointing row · Box "&boxNum&" confines digit "&digitNum&" to row "&targetRow&" via "&sourceText&" · Remove "&digitNum&" from "&targetText&".","")))))))
 ```
 
 ## `SDK_RenderDigit`
