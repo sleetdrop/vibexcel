@@ -1709,6 +1709,18 @@ the two policies in tests.
    normal use is blocked or practical resource limits are exceeded.
 3. Continue to leave production untouched pending separate rollout approval.
 
+### Pause before the next round
+
+- At the user's request, paused ahead of the five-hour usage limit. The latest
+  prototype work and regression results are committed as `e1a7692`; no next-
+  round Claiming Column edits have started.
+- Closed the saved prototype workbook and quit Microsoft Excel. The app was
+  confirmed not running afterward. The prototype and production workbook
+  SHA-256 values still match the hashes recorded above.
+- When usage resets, reopen only the independent structured-slice prototype,
+  verify its target and clean Master state, then begin the bounded Claiming
+  Column audit. Leave the production workbook unchanged.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
