@@ -1721,6 +1721,45 @@ the two policies in tests.
   verify its target and clean Master state, then begin the bounded Claiming
   Column audit. Leave the production workbook unchanged.
 
+## 2026-09-22 structured Claiming Column checkpoint
+
+- Resumed from the saved structured-slice prototype at commit `1ea672f`.
+  Production `Sudoku/sudoku.xlsx` was not edited and retained SHA-256
+  `f69c6b84f19eb46334167b1729cee1e844e225eaf3a150b00a58eb1d7272125a`.
+- Read-only audit confirmed `SDKP_ClaimingCol` previously returned prose only;
+  `SDKP_ChainLoop` reached it through `SDKP_AdvancedHint` and parsed that
+  prose with `SDKP_Apply`. The baseline native suite was 107 PASS, 0 FAIL,
+  18 SKIP, with clean Master inputs and mode `Off`.
+- Added persistent native `_Tests!179:181` before implementing the step. A
+  synthetic matrix confines digit 3 in column 2 to R7C2/R8C2 and requires
+  removal from R7C3. The tests assert all five action fields, structured
+  application independent of display wording, and old-entry compatibility.
+  All three were RED while `SDKP_ClaimingColStep` was absent, then GREEN.
+- Added `SDKP_ClaimingColStep(candidates)` with deterministic first-hit
+  selection and `technique | sources | digits | targets | displayText` output.
+  `SDKP_ClaimingCol` now returns field 5 as a compatibility wrapper. The
+  chain selects structured Claiming Column after the Pointing pair and
+  Claiming Row, applying it through `SDKP_ApplyStep`. Naked Pair remains on
+  the legacy text-parser path; public wording and strategy order are kept.
+- Complete Excel-native regression: **110 PASS, 0 FAIL, 18 SKIP**. Direct
+  name readback confirmed the wrapper and dispatch. The new test range had
+  no formula-error values. Master retained 23 givens, blank temporary input
+  cells, and `Off` mode.
+- Saved the independent workbook through Excel. Offline ZIP integrity and
+  cached-result checks passed: 110 PASS, 0 FAIL, 18 SKIP, all three new
+  tests PASS, 24 `SDKP_` names, and a clean Master state. Saved prototype
+  SHA-256:
+  `14ffec6f887e570a076cc2298c5d045b600be2b4f05aaaa92b8e2c3f1555c3b3`.
+
+### Next bounded round
+
+1. Audit the remaining Naked Pair text-parser strategies, starting with the
+   row variant. Add a native RED contract test before any migration; keep
+   column and box variants separate.
+2. Continue to defer performance stress unless normal use is blocked or
+   resources directly exceed practical limits. Production rollout still
+   requires separate approval.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
