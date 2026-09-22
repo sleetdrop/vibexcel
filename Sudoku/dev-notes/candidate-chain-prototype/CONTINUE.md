@@ -1833,6 +1833,57 @@ the two policies in tests.
 2. Defer performance stress unless normal use is blocked or resources
    exceed practical limits. Production rollout requires separate approval.
 
+## 2026-09-22 structured Naked Pair Box checkpoint
+
+- Continued only in the independent structured-slice prototype from commit
+  `beae746`. Production `Sudoku/sudoku.xlsx` was not edited and retained
+  SHA-256
+  `f69c6b84f19eb46334167b1729cee1e844e225eaf3a150b00a58eb1d7272125a`.
+- Audited `SDKP_NakedPairBox`: it returned prose only, and the chain used
+  `SDKP_AdvancedHint` plus `SDKP_Apply` to parse and execute that text.
+  Baseline native suite: 118 PASS, 0 FAIL, 18 SKIP. Microsoft documents
+  `TOCOL`'s omitted third argument as row-major scanning, matching the
+  box-coordinate mapping. An off-diagonal native characterization case
+  confirmed the old public wording and coordinate mapping.
+  Reference: https://support.microsoft.com/en-us/excel/functions/tocol-function
+- Added persistent `_Tests!190:196`: old-entry characterization; five
+  new step contracts for five fields, wording-independent application,
+  wrapper compatibility, rejection of three equal pairs, and box 5
+  mapping; plus a chain fixture where a box elimination reveals an
+  assignment. The five step contracts were RED while the step name was
+  absent. The old-entry and chain characterizations passed before routing.
+- Added `SDKP_NakedPairBoxStep(candidates)` with old row-major first-hit
+  order and structured `technique | sources | digits | targets |
+  displayText` output. The public `SDKP_NakedPairBox` returns field 5.
+  `SDKP_ChainLoop` now selects the box step after the other six advanced
+  steps and applies all advanced eliminations via `SDKP_ApplyStep`; it no
+  longer calls the text-parser fallback. The public advanced-hint
+  dispatcher and its wording remain available for compatibility.
+- Full Excel-native regression: **125 PASS, 0 FAIL, 18 SKIP**. Direct
+  readback confirmed structured routing and absence of the parser and
+  advanced-text fallback from `SDKP_ChainLoop`. New tests had no formula-
+  error values. Master retained 23 givens, six blank temporary input
+  cells and `Off` mode.
+- Saved through Excel. Offline ZIP integrity and cached-result checks
+  passed: 125 PASS, 0 FAIL, 18 SKIP, seven new cases PASS, and 27 `SDKP_`
+  names. Prototype SHA-256:
+  `272ba993273d4b7d3b08af4dfd34eeedac0cddd39e11ad524d057d5b88490eed`.
+
+### Overall progress and next bounded round
+
+- All seven advanced strategy variants now have structured actions in
+  the independent prototype. This does not mean the production workbook
+  has been migrated: only the prototype's Master engine is wired to the
+  chain, and `Sudoku/sudoku.xlsx` remains unchanged on all five sheets.
+- Next, audit the prototype's shared chain contract and cross-sheet
+  functional correctness, particularly malformed candidate input, delete/
+  replay behavior, and stop-state boundaries. Keep experiments bounded;
+  retire an unreliable feature rather than forcing it into production.
+- Review recursive-name versus fixed-depth implementation and a safe
+  cross-sheet rollout proposal before requesting separate approval for
+  any production edits. Defer performance stress unless normal use is
+  blocked or resources directly exceed practical limits.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
