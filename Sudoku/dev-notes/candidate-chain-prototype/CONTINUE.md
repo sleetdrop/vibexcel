@@ -1589,6 +1589,48 @@ the two policies in tests.
    strategy migration or rollout. Keep performance experiments deferred unless
    normal use is blocked or resources are exceeded.
 
+## 2026-09-22 no-progress elimination checkpoint
+
+- Continued in the saved independent structured-slice prototype from commit
+  `21bd9ad`. Production `Sudoku/sudoku.xlsx` was not edited and retained
+  SHA-256
+  `f69c6b84f19eb46334167b1729cee1e844e225eaf3a150b00a58eb1d7272125a`.
+- Root cause: `SDKP_ChainLoop` previously recurred after any nonempty advanced
+  hint without checking whether applying that hint actually shortened the
+  candidate matrix. A no-op could consume the step budget and end as `LIMIT`
+  rather than identify the faulty elimination.
+- Added persistent native `_Tests!173:175` before implementation: removing
+  an absent digit is not progress, removing a present digit is progress, and
+  growing a candidate set is not progress. All three were RED (`FAIL`) before
+  `SDKP_HasProgress` existed and GREEN (`PASS`) afterward.
+- Added `SDKP_HasProgress(before,after)` to compare total candidate-string
+  lengths. `SDKP_ChainLoop` now recurs only when this total decreases. On a
+  nondecreasing result, it returns the original candidate matrix with status
+  `NO_PROGRESS` and the attempted hint, without increasing the step count.
+  This is a defensive guard; the currently valid strategy functions normally
+  generate an effective elimination.
+- The Excel-native regression was **104 PASS, 0 FAIL, 18 SKIP**, including the
+  Master two-step chain fixture and all three new tests. Excel readback
+  confirmed the guard is in the recursive branch. The current strategy set
+  does not naturally generate a no-op, so the terminal `NO_PROGRESS` branch
+  has not been triggered end-to-end in a native chain test; the predicate and
+  existing normal recursion path were tested separately.
+- The prototype was saved in place through Excel. Its ZIP passed integrity
+  checking and offline cached-result verification: 104 PASS, 0 FAIL, 18 SKIP,
+  22 `SDKP_` names, and all three new test results PASS. The Master live board
+  still has 23 givens, the six temporary fixture inputs are blank, and mode
+  is `Off`. Saved SHA-256:
+  `7cab569e47f1976ab4d750c4add4c88de68058aff7304ff561675289044f4a8f`.
+
+### Next bounded round
+
+1. Keep production untouched. Decide whether a small, isolated test seam can
+   exercise the `NO_PROGRESS` terminal output in Excel without altering
+   strategy behavior or adding test-only parameters to the public chain API.
+2. Then audit the remaining legacy text-parser path, beginning with Claiming
+   Row, before migrating another strategy. Treat performance work as deferred
+   unless normal use is blocked or resources exceed practical limits.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
