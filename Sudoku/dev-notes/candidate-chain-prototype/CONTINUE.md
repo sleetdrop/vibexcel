@@ -1554,6 +1554,41 @@ the two policies in tests.
 4. Only then consider another advanced-strategy migration or production
    rollout. Production remains untouched until explicit approval.
 
+## 2026-09-22 duplicate forced-single contradiction checkpoint
+
+- Continued only in the independent
+  `sudoku-candidate-chain-structured-slice.xlsx` prototype. Production
+  `Sudoku/sudoku.xlsx` was not edited and retained SHA-256
+  `f69c6b84f19eb46334167b1729cee1e844e225eaf3a150b00a58eb1d7272125a`.
+- Added persistent native `_Tests!169:172` cases before changing formulas:
+  duplicate forced digit 1 in a row, a column, and a box (but not a shared
+  row/column), plus a separated-singleton control. The first three were RED
+  (`FAIL`), while the control passed.
+- Added `SDKP_ForcedConflict(board,c)` and included it in
+  `SDKP_Contradiction`. It checks only blank cells with exactly one candidate,
+  then detects duplicate forced digits in any row, column, or box. The
+  strategy order, display wording, live board, and production workbook were
+  not changed.
+- The GREEN Excel-native regression returned **101 PASS, 0 FAIL, 18 SKIP**.
+  All four new cases and the pre-existing structured-chain fixture passed.
+  The name definitions were read back from Excel. The saved XLSX passed ZIP
+  integrity and offline cached-result checks: 101 PASS, 0 FAIL, 18 SKIP,
+  21 `SDKP_` names, all four new cases PASS, and the new guard referenced by
+  `SDKP_Contradiction`.
+- The clean Master board still has 23 givens; `05 Master!AS11` is `Off`, and
+  all six temporary fixture input cells are blank. The prototype was saved
+  in place through Excel. Saved SHA-256:
+  `8d6194fc10d327c194fc8d933a21901584e39cd8655d19a6cf808588b7596ca3`.
+
+### Next bounded round
+
+1. Use this saved prototype as the baseline; do not alter production yet.
+2. Test a no-progress elimination where applying a step does not reduce the
+   candidate count. Add an explicit stop/error state instead of recurring.
+3. Recheck the native suite and clean Master state before considering another
+   strategy migration or rollout. Keep performance experiments deferred unless
+   normal use is blocked or resources are exceeded.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
