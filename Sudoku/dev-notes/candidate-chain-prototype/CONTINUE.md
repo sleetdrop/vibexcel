@@ -1980,6 +1980,43 @@ the two policies in tests.
   for any production change. Malformed internal candidate input remains
   deferred unless it becomes reachable from normal use.
 
+## 2026-09-23 wrong-entry recovery checkpoint
+
+- Exercised a reversible live conflict in the independent Master prototype:
+  entered `R2C1=1` in `05 Master!C8`, duplicating the given `R1C1=1` in the
+  same column. Both endpoints displayed the conflict marker, the conflict
+  count became 2, the candidate chain stopped at `CONTRADICTION`, and all
+  three Coach lines were suppressed while the board was invalid.
+- Cleared the temporary value without saving it. Exact before/after comparison
+  confirmed full restoration of the live board, ordinary candidates, 9x9
+  conflict matrix, chain matrix and state, Coach lines, visible candidates,
+  and input cell.
+- Added persistent native `_Tests!201`. Its controlled fixture checks exactly
+  two duplicate flags, chain `CONTRADICTION` with zero elimination steps, and
+  recovery to the literal original candidate and Hidden Single assignment.
+  No implementation formula changed.
+- Full Excel-native regression: **130 PASS, 0 FAIL, 18 SKIP**. No formula-error
+  cell values were found. Saved through Excel; ZIP integrity and cached-result
+  checks passed. Master retained 23 givens, six blank temporary inputs and
+  `Off` mode. Prototype SHA-256:
+  `ecb651f92655f6fd8601b36bc7bea4b7e6c407a6fa9bf6e94e8b47c85d2f64c0`.
+  Production remained unchanged at SHA-256
+  `f69c6b84f19eb46334167b1729cee1e844e225eaf3a150b00a58eb1d7272125a`.
+
+### Overall progress and next bounded round
+
+- All seven advanced strategies use structured actions in the independent
+  prototype. Stop states, valid-entry replay, and conflict-entry recovery now
+  have persistent native coverage. Only prototype Master is chain-connected;
+  all five production sheets remain unchanged.
+- Next, perform a read-only architecture review of recursive `SDKP_ChainLoop`
+  versus a bounded fixed-depth alternative, including Excel recalculation,
+  maintainability, and five-sheet rollout implications. Produce a recommendation
+  and rollout/cut decision; do not change formulas or production in that round.
+- Keep malformed direct candidate input deferred unless the review finds a
+  normal user path that can reach it. Performance stress remains deferred unless
+  normal usage or resource limits require it.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
