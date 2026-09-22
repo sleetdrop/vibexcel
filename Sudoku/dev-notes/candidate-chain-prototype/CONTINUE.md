@@ -1914,6 +1914,33 @@ the two policies in tests.
   whether a formula fix is needed. Keep deletion/replay as a separate
   later round. Production rollout still requires separate approval.
 
+## 2026-09-23 chain stop-state regression checkpoint
+
+- Added persistent native tests `_Tests!197:199` in the independent
+  structured-slice prototype. The zero-budget box-pair fixture checks
+  `LIMIT`, zero executed steps, unchanged candidates, and a pending
+  elimination hint. The full-candidate fixture checks `STABLE` with no
+  hint. The dead-cell fixture checks `CONTRADICTION` before any hint.
+- All three new tests passed without a formula change. Full Excel-native
+  regression: **128 PASS, 0 FAIL, 18 SKIP**. Saved through Excel; offline
+  ZIP integrity and cached-result checks agreed. Master retained six
+  blank temporary inputs and `Off` mode. Prototype SHA-256:
+  `07964df87c8767c3b53b050f17213f4ee37cd21413e862ff10d8dc4d283c1d66`.
+  Production `Sudoku/sudoku.xlsx` was not edited and retained SHA-256
+  `f69c6b84f19eb46334167b1729cee1e844e225eaf3a150b00a58eb1d7272125a`.
+- Overall: all seven advanced strategy variants use structured actions in
+  the independent prototype; only the prototype Master engine is chain-
+  connected. None of the five production sheets has been migrated.
+
+### Next bounded round
+
+1. Audit delete/replay behavior with read-only tracing first. Build a
+   controlled native regression fixture only after identifying the
+   intended observable contract; keep production and other sheets unchanged.
+2. Revisit malformed direct candidate input only if it is reachable in
+   normal use or a clear validation contract is chosen. Review the recursive
+   versus fixed-depth tradeoff before proposing any production rollout.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
