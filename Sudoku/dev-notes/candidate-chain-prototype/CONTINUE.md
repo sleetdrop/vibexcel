@@ -1760,6 +1760,43 @@ the two policies in tests.
    resources directly exceed practical limits. Production rollout still
    requires separate approval.
 
+## 2026-09-22 structured Naked Pair Row checkpoint
+
+- Continued only in the saved structured-slice prototype from commit
+  `ed9dafc`. Production `Sudoku/sudoku.xlsx` was not edited and retained
+  SHA-256
+  `f69c6b84f19eb46334167b1729cee1e844e225eaf3a150b00a58eb1d7272125a`.
+- Read-only audit confirmed `SDKP_NakedPairRow` returned only prose, while
+  `SDKP_ChainLoop` reached it through `SDKP_AdvancedHint` and used the
+  prose parser in `SDKP_Apply`. The baseline native suite was 110 PASS,
+  0 FAIL, 18 SKIP.
+- Added persistent native `_Tests!182:185` before implementation. R4C2 and
+  R4C5 contain the pair `47`; R4C7 contains `478` and must become `8`.
+  The cases assert the five-field contract, application independent of
+  display wording, old-entry compatibility, and rejection when three cells
+  carry the same pair. All four were RED while the step name was absent.
+- Added `SDKP_NakedPairRowStep(candidates)` with deterministic first-hit
+  selection and structured `technique | sources | digits | targets |
+  displayText` output. The old `SDKP_NakedPairRow` now returns field 5.
+  `SDKP_ChainLoop` selects it after Claiming Column and applies it through
+  `SDKP_ApplyStep`; Naked Pair Column and Box remain on the legacy text path.
+  Public wording and strategy order were preserved.
+- Full Excel-native regression: **114 PASS, 0 FAIL, 18 SKIP**, including the
+  Master two-elimination chain fixture. Direct readback confirmed the new
+  name and chain routing. New test cells had no formula-error values.
+- Saved the independent prototype through Excel. Its ZIP and cached results
+  passed offline checks: 114 PASS, 0 FAIL, 18 SKIP, four new cases PASS,
+  25 `SDKP_` names, 23 Master givens, six blank fixture inputs, and `Off`
+  mode. Saved prototype SHA-256:
+  `2ed85bb5e5cf0473baf8aa76547da2fffefcd4b753b9c5453e719feb7aa2f49b`.
+
+### Next bounded round
+
+1. Audit Naked Pair Column's remaining prose-parser path and add a native
+   RED contract test before any migration. Keep Box separate.
+2. Defer performance stress unless normal use is blocked or resources
+   exceed practical limits. Keep production unchanged pending rollout approval.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
