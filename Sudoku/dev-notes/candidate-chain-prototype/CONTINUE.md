@@ -1941,6 +1941,45 @@ the two policies in tests.
    normal use or a clear validation contract is chosen. Review the recursive
    versus fixed-depth tradeoff before proposing any production rollout.
 
+## 2026-09-23 valid-entry delete/replay checkpoint
+
+- Traced the live dependency path in the independent prototype. Every visible
+  Master input feeds `_Engine Master!B3:J11` directly; the ordinary candidate
+  matrix and `SDKP_Chain` are recalculated from that current board. No prior
+  candidate matrix is retained as workbook state.
+- Exercised two reversible live round trips without saving intermediate input:
+  entered the correct `R2C1=5`, then cleared it; entered the current Coach
+  target `R8C3=1`, which changed the chain from `ASSIGNMENT` to `STABLE` and
+  changed Coach to its fallback reveal, then cleared it. After each clear, an
+  exact comparison confirmed restoration of the live board, ordinary
+  candidates, chain matrix and status, Coach lines, visible candidates, and
+  input cells.
+- Added persistent native `_Tests!200`. Its controlled board fixture checks
+  the literal post-entry `STABLE` result and the literal post-removal
+  `ASSIGNMENT`, `R8C3` candidate, and hint. No implementation formula changed.
+- Full Excel-native regression: **129 PASS, 0 FAIL, 18 SKIP**. No formula-error
+  cell values were found. Saved through Excel; ZIP integrity and cached-result
+  checks passed. Master retained 23 givens, six blank temporary inputs and
+  `Off` mode. Prototype SHA-256:
+  `f2be7ed05757de74eb068c12f74dd8325eb9f75696ec63738763f9a8c0a01fef`.
+  Production remained unchanged at SHA-256
+  `f69c6b84f19eb46334167b1729cee1e844e225eaf3a150b00a58eb1d7272125a`.
+
+### Overall progress and next bounded round
+
+- All seven advanced strategies use structured actions in the independent
+  prototype. Stop-state boundaries and valid-entry delete/replay now have
+  persistent native coverage. Only the prototype Master engine is connected;
+  none of the five production sheets has been migrated.
+- Next, audit wrong-entry recovery as a separate user-facing contract: create
+  one controlled conflict in a temporary Master input, confirm conflict and
+  Coach suppression, clear it, and verify exact recovery before deciding
+  whether another native regression is warranted. Keep production unchanged.
+- After functional input recovery is covered, review recursive-name versus
+  fixed-depth design and cross-sheet rollout risk before requesting approval
+  for any production change. Malformed internal candidate input remains
+  deferred unless it becomes reachable from normal use.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
