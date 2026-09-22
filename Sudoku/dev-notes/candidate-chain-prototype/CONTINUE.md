@@ -1672,6 +1672,43 @@ the two policies in tests.
    checkpoint only the independent prototype. Do not alter production until
    separately approved.
 
+## 2026-09-22 structured Claiming Row checkpoint
+
+- Continued only in `sudoku-candidate-chain-structured-slice.xlsx` from commit
+  `7e83f63`. Production `Sudoku/sudoku.xlsx` was not edited and retained
+  SHA-256
+  `f69c6b84f19eb46334167b1729cee1e844e225eaf3a150b00a58eb1d7272125a`.
+- Added persistent native `_Tests!176:178` before implementation. The
+  synthetic Claiming Row fixture constrains digit 3 to R2C7/R2C8 in row 2
+  and has R3C7 as the sole box target. Tests assert the exact five-field
+  contract, candidate elimination despite altered display wording, and
+  compatibility of the old public text wrapper. All three were RED before
+  the new step existed and GREEN afterward.
+- Added `SDKP_ClaimingRowStep(candidates)`, returning
+  `technique | sources | digits | targets | displayText` with deterministic
+  first-hit selection. `SDKP_ClaimingRow` now returns only field 5, preserving
+  the old public wording. `SDKP_ChainLoop` selects structured Claiming Row
+  after structured Pointing Row/Column and applies it with `SDKP_ApplyStep`.
+  Claiming Column and Naked Pair remain on the legacy text-parser path; the
+  strategy priority was not changed.
+- Full Excel-native regression: **107 PASS, 0 FAIL, 18 SKIP**. The affected
+  named formulas were read back directly from Excel. Master retained 23
+  givens, its six temporary fixture inputs were blank, and mode was `Off`.
+- Saved the independent prototype through Excel. Offline ZIP integrity and
+  cached-result checks passed: 107 PASS, 0 FAIL, 18 SKIP, all three new
+  tests PASS, 23 `SDKP_` names, clean Master state, and stored references to
+  the new step and structured application. Saved prototype SHA-256:
+  `8af8524405e63abd16b47515d1ed77e89ee372e42596d052f44c42f49cb2a839`.
+
+### Next bounded round
+
+1. Audit the remaining Claiming Column text-parser path and add a failing
+   native structured-step test before implementation. Preserve its wording
+   and priority if migration is warranted.
+2. Keep Naked Pair migrations separate and defer performance stress unless
+   normal use is blocked or practical resource limits are exceeded.
+3. Continue to leave production untouched pending separate rollout approval.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
