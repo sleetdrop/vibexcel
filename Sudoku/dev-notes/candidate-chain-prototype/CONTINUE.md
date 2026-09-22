@@ -1631,6 +1631,47 @@ the two policies in tests.
    Row, before migrating another strategy. Treat performance work as deferred
    unless normal use is blocked or resources exceed practical limits.
 
+## 2026-09-22 no-progress test-seam and Claiming Row audit
+
+- Read-only audit of the connected, saved structured-slice prototype at
+  commit `43a5592`. Neither workbook was edited or saved. Production and
+  prototype SHA-256 remained, respectively,
+  `f69c6b84f19eb46334167b1729cee1e844e225eaf3a150b00a58eb1d7272125a`
+  and `7cab569e47f1976ab4d750c4add4c88de68058aff7304ff561675289044f4a8f`.
+  Native `_Tests!E1:E175` still showed **104 PASS, 0 FAIL, 18 SKIP**.
+- `SDKP_ChainLoop` has no input for an externally supplied advanced step.
+  The current Pointing, Claiming, and Naked Pair detectors construct targets
+  from candidate cells that actually contain the digit to remove. Therefore
+  a valid strategy-generated step does not naturally enter the
+  `NO_PROGRESS` branch. A full-chain synthetic trigger would require a
+  temporary override of a workbook strategy name, an unverified name-scope
+  trick, or a new test-only injection API. None is justified merely to test
+  this defensive branch; keep the existing native predicate cases and the
+  verified branch readback, and disclose this test boundary before rollout.
+- Direct formula audit shows `SDKP_AdvancedHint` selects `SDKP_ClaimingRow`
+  before `SDKP_ClaimingCol` and Naked Pair variants when structured Pointing
+  finds nothing. `SDKP_ClaimingRow` emits only display prose. `SDKP_Apply`
+  parses `Remove ... from ...` back from that prose to identify digits and
+  targets, so changes to display wording can change the elimination action.
+- `_Tests!19` covers the legacy `SDK_HintClaiming` public wording, not the
+  prototype `SDKP_ClaimingRow`; searching `_Tests!A1:E175` found no direct
+  `SDKP_Claiming*` formula. This is a prototype coverage gap, not evidence of
+  an observed wrong result. Pointing Row and Column already use five-field
+  structured steps and apply their data fields without parsing display text.
+
+### Next bounded round
+
+1. Write a RED native five-field contract test for
+   `SDKP_ClaimingRowStep(candidates)` using a small synthetic matrix. Place
+   digit 3 only at R2C7 and R2C8 in row 2, with R3C7 as the sole box target.
+2. If the RED test fails for the expected missing-name reason, implement the
+   smallest Claiming Row structured step, preserve the existing public text
+   wrapper, and route only that structured step through `SDKP_ApplyStep`.
+   Keep Claiming Column and Naked Pair on the existing path for now.
+3. Run the full native regression and clean Master checks, then save and
+   checkpoint only the independent prototype. Do not alter production until
+   separately approved.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
