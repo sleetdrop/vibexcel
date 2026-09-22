@@ -1884,6 +1884,36 @@ the two policies in tests.
   any production edits. Defer performance stress unless normal use is
   blocked or resources directly exceed practical limits.
 
+## 2026-09-23 chain boundary read-only audit
+
+- Resumed from commit `8a159b8` in the connected independent prototype.
+  The live native test baseline remained **125 PASS, 0 FAIL, 18 SKIP**.
+  No workbook cells or names were changed in this round. Production
+  retained SHA-256
+  `f69c6b84f19eb46334167b1729cee1e844e225eaf3a150b00a58eb1d7272125a`.
+- Traced the normal candidate path: `SDKP_Chain` calls
+  `SDK_CandidateMatrix`; `SDK_Candidates` filters `SEQUENCE(9)` against
+  placed digits, and `SDKP_ApplyStep` only removes characters. Thus the
+  normal path does not introduce an out-of-domain candidate character.
+  Direct calls to the internal `SDKP_ChainLoop` can pass an arbitrary
+  candidate matrix, but input validation for that test seam is not yet
+  established. Do not add a per-step validator without a reachable
+  failure or an explicitly chosen contract, especially given the
+  earlier recalculation/resource concerns.
+- `SDKP_ChainLoop` chooses terminal states in this order:
+  `CONTRADICTION`, `ASSIGNMENT`, `STABLE`, `LIMIT`, then `CONTINUE`.
+  Existing persistent native tests exercise the normal assignment
+  chain (`_Tests!167` and `196`), forced-conflict detection, and the
+  progress predicate, but there are no direct persistent chain tests
+  for `LIMIT`, `STABLE`, or `CONTRADICTION` stop output. Earlier manual
+  checks of these states do not replace durable native regression.
+- Recommended next bounded round: add three native chain tests using
+  controlled 9x9 matrices for zero-budget pending elimination (`LIMIT`),
+  an all-candidates no-strategy state (`STABLE`), and one dead cell
+  (`CONTRADICTION`). Verify outputs and full regression before deciding
+  whether a formula fix is needed. Keep deletion/replay as a separate
+  later round. Production rollout still requires separate approval.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
