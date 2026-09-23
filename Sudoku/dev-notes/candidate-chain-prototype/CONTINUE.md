@@ -2306,6 +2306,56 @@ the two policies in tests.
   Coach connection. Repeat native suite, correct/wrong-entry recovery,
   save/reopen, and semantic package checks before considering Medium.
 
+## 2026-09-23 production Hard migration
+
+- Started from committed Expert migration `2701b60`; production SHA-256 was
+  `b4bc524134e1007f1f40f34f5035776aa9eb1557421c96ed55c214b9dd60125f`.
+  Hard still used `SDK_Candidates`, `SDK_PlayerHint`, and `SDK_PlayerTrace`.
+  Its clean board had 28 givens, blank `C5` and `K23`, `AS11 = "Off"`, and
+  native regression **131 PASS / 0 FAIL / 18 SKIP**.
+- Updated `_Tests!B145,D145` to require the Hard chain Coach/fallback path
+  alongside Expert and Master, while Easy and Medium retain standard
+  wrappers. The assertion first returned `FALSE` / `FAIL`, then passed
+  after Hard was connected.
+- Added `_Engine Hard!L101` label and
+  `L102 = SDKP_Chain($B$3:$J$11,8)`. The clean chain returned
+  `ASSIGNMENT`, step `0`, Naked Single `R7C3 = 6`. Connected all 81
+  `B15:J23` candidate projections; native comparison found zero value
+  or formula mismatches. Connected Coach `B88:B90` using the verified
+  chain/fallback pattern with the Hard-specific `AS11` reference.
+  Full suite returned **131 PASS / 0 FAIL / 18 SKIP**.
+- Correct `03 Hard!K23 = 6` produced zero conflicts and advanced the
+  Coach to Naked Single `R8C1 = 8`. Deleting it restored exact clean
+  visible/engine fingerprints `f35b21cb` / `82b52341`. Wrong `C5 = 9`
+  conflicted with the given row-1 and column-1 nines: three conflict
+  flags, chain `CONTRADICTION` at step `0`, and blank Coach. Clearing it
+  restored both fingerprints and the original `R7C3 = 6` guidance.
+- Saved, closed, and reopened production through Excel. Reopened native
+  suite remained **131/0/18**; Hard guidance, blank temporary inputs,
+  `Off` mode, both fingerprints, and Expert/Master guidance persisted.
+  Reopened error search found only three intentional `#N/A` text examples
+  on Formula Reference. Excel requested another save on final close;
+  saved and closed, then repeated the package audit.
+- Against `2701b60`, offline semantic comparison found exactly **85**
+  changed Hard formulas (81 projections, three Coach cells, one anchor),
+  two changed `_Tests!145` cells, and the new Hard chain spill/cache
+  within `L102:T111`. No cell value or style changed outside those
+  approved ranges. Sheet order, all 78 workbook names, calculation
+  settings, ZIP integrity, and package part count were unchanged.
+  Final cached Hard status/Coach and `E145 = PASS` were read back.
+- Final production SHA-256:
+  `f48a4e466ae39f168c2daa9a2e947189f1693936eda437107b62f868f46fde70`.
+
+### Overall progress and next bounded round
+
+- Candidate-chain strategy coverage remains **7/7**. Production now has
+  **3/5 engines connected**: Master, Expert, and Hard. Medium and Easy
+  retain their original engine formulas.
+- Next, migrate Medium alone. Update the shared Coach-path assertion
+  first and watch it fail, then add only Medium's anchor, 81 projections,
+  and Coach connection. Repeat the native suite, correct/wrong-entry
+  recovery, save/reopen, and semantic package checks before Easy.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
