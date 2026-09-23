@@ -2155,6 +2155,59 @@ the two policies in tests.
   save/close/reopen verification, then make the keep/cut recommendation before
   requesting any production edit.
 
+## 2026-09-23 Master production-copy pilot
+
+- Created `sudoku-master-production-copy-pilot.xlsx` from a byte-identical copy
+  of production, then followed `MASTER-PILOT.md` without opening production for
+  write. Production retained SHA-256
+  `f69c6b84f19eb46334167b1729cee1e844e225eaf3a150b00a58eb1d7272125a`.
+- The tests-first RED phase behaved as intended: the updated Coach-path assertion
+  and the new structured-chain block failed or returned `#NAME?` before the
+  shared names and Master connection were installed. After installing the exact
+  27 `SDKP_` definitions and connecting only `_Engine Master`, Excel-native
+  acceptance was **131 PASS, 0 FAIL, 18 SKIP**.
+- Clean Master state was `ASSIGNMENT`, step `0`, Hidden Single `R8C3 = 1`, with
+  all six temporary inputs blank and `AS11 = "Off"`. `B15:J23` exactly matched
+  `L102:T110`. The calculated-error scan found only the intentional formula-text
+  examples on Formula Reference, not calculated workbook errors.
+- A correct-entry/delete round trip and a wrong-entry/clear round trip both
+  restored the exact pre-interaction fingerprints: visible Master `820e2b46`
+  and engine `532ea658`. The wrong entry produced exactly the expected two
+  conflicts and `CONTRADICTION`; clearing it restored the clean assignment.
+- Save, close, reopen, and a second save/close retained the same acceptance
+  results, clean state, projections, and fingerprints. Final pilot SHA-256 is
+  `61c6858d4aefe5a11294c8e8296d010d64a991d3f51202f6ec0b8f088a7151e3`;
+  ZIP integrity and cached-result readback passed.
+- The final semantic package comparison found exactly 27 added `SDKP_` names,
+  no changed pre-existing name, **85** formula differences on `_Engine Master`,
+  and **95** on `_Tests`. The copied test and Master target ranges match the
+  verified structured-slice prototype in formulas, values, and styles. No cell
+  value or style changed outside the approved ranges; no non-cell worksheet
+  structure or calculation contract changed.
+- Package review caught a formatting-only copy error before completion:
+  `_Tests!A164,A172,A182,A188,A190` initially inherited the wrong nearby row
+  pattern. Those five formats were repaired and the final comparison reports
+  zero target-style mismatches.
+- Saving through the connected ChatGPT Excel add-in adds its three
+  `xl/webextensions` parts plus the package relationship/content-type entries.
+  The same add-in metadata is present in the verified prototype; it contains
+  the add-in reference and document-control UUID, not Sudoku logic. Treat this
+  as an explicit tooling artifact when reviewing or promoting a production
+  change, rather than as part of the candidate-chain feature.
+
+### Keep/cut decision and next bounded round
+
+- **KEEP for Master rollout consideration.** None of the documented cut
+  conditions occurred during ordinary interaction or save/reopen validation.
+- Current coverage/migration status is **7/7 structured strategies**, saved
+  suite **131 PASS / 0 FAIL / 18 SKIP**, **1/5 prototype engines connected**,
+  **1/5 production-copy pilot engines connected**, and **0/5 production engines
+  migrated**.
+- The next bounded round is a separately approved production migration of
+  Master only, using the exact verified pilot surface. After Master passes the
+  same native and save/reopen checks, consider Expert, Hard, Medium, and Easy
+  one at a time. Do not edit production merely because the pilot passed.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
