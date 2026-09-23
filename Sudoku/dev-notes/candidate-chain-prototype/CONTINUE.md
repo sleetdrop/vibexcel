@@ -2017,6 +2017,103 @@ the two policies in tests.
   normal user path that can reach it. Performance stress remains deferred unless
   normal usage or resource limits require it.
 
+## 2026-09-23 recursive-chain architecture decision
+
+- This round was read-only. The connected structured-slice prototype was open
+  in Excel, but no cell, name, calculation setting, or workbook file was edited
+  or saved. The preserved prototype and production SHA-256 values remained
+  `ecb651f92655f6fd8601b36bc7bea4b7e6c407a6fa9bf6e94e8b47c85d2f64c0`
+  and `f69c6b84f19eb46334167b1729cee1e844e225eaf3a150b00a58eb1d7272125a`.
+- Live inspection confirmed 27 workbook-scoped `SDKP_` names. The sole sheet
+  call remains `_Engine Master!L102 = SDKP_Chain($B$3:$J$11,8)`; workbook
+  formula search found no other engine invocation. `_Engine Master` alone
+  extends through row 111 and projects the chain result into `B15:J23` and the
+  Coach at `B88:B90`. Easy, Medium, Hard, and Expert still end at row 100 and
+  use their original `SDK_Candidates`, `SDK_PlayerHint`, and `SDK_PlayerTrace`
+  formulas. Excel calculation mode was `Automatic`.
+- `SDKP_ChainLoop` is a 2,016-character named LAMBDA with one direct recursive
+  branch. At each visited state it checks, in order, `CONTRADICTION`,
+  `ASSIGNMENT`, `STABLE`, `LIMIT`, then `CONTINUE`. The production candidate
+  for an anchor uses a literal limit of 8, so it can perform at most eight
+  elimination transitions and visit at most nine states. A strictly shorter
+  candidate matrix is also required before recurrence. This is a bounded state
+  fold, not an unbounded solver or an Excel circular cell reference.
+- Microsoft documents that recursive LAMBDA can return `#NUM!` after too many
+  recursive calls, but does not publish a portable numeric recursion ceiling:
+  <https://support.microsoft.com/en-us/excel/functions/lambda-function>.
+  The explicit depth of 8 is therefore part of this prototype's contract and
+  must not be replaced with an unlimited or user-controlled depth.
+- A single-formula fixed-depth alternative using `REDUCE(SEQUENCE(8),...)` is
+  technically plausible. Microsoft defines `REDUCE` as applying its LAMBDA to
+  each value in the supplied array:
+  <https://support.microsoft.com/en-US/Excel/functions/reduce-function>.
+  It has no documented early-exit operation, so our terminal states would have
+  to be packed into the accumulator and carried through the remaining calls.
+  That removes the self-call but does not remove the repeated candidate and
+  strategy evaluation surface, and it makes the 10x9 result/log contract harder
+  to inspect.
+- An eight-stage helper-range alternative would be easier to step through but
+  would materialize up to nine 10x9 states per engine, roughly 810 cells per
+  sheet and 4,050 across five engines before projections and Coach formulas.
+  It would also duplicate stage wiring on every engine. Microsoft recommends
+  removing duplicated calculations and keeping array ranges small, while also
+  noting that helper ranges can sometimes aid smart recalculation:
+  <https://learn.microsoft.com/en-us/office/vba/excel/concepts/excel-performance/excel-improving-calculation-performance>.
+  In this workbook the added dependency and maintenance surface is not justified
+  by a demonstrated failure of the bounded recursive form.
+- The earlier budget-zero experiment is decisive for this architecture choice:
+  its retained-memory observation occurred without any recursive call or
+  candidate rewrite. Later long observations also withdrew the durable Easy
+  range-retention claim. Replacing recursion with fixed depth therefore does not
+  target the observed resource behavior. `LET` already centralizes each named
+  intermediate within a visited state; Microsoft documents that this avoids
+  recalculating the same repeated expression:
+  <https://support.microsoft.com/en-us/excel/functions/let-function>.
+- Live re-read confirmed the structured chain fixtures at `_Tests!167` and
+  `_Tests!196:201` still report `PASS`, covering the two-elimination path, box
+  elimination, `LIMIT`, `STABLE`, `CONTRADICTION`, valid-entry deletion/replay,
+  and wrong-entry recovery. The saved complete-suite baseline remains
+  **130 PASS, 0 FAIL, 18 SKIP**. A final compact aggregate read timed out twice
+  in the connector after these successful reads; because this round made no
+  workbook change, that timeout is not formula evidence and no extra retry was
+  made.
+
+### Decision and rollout gate
+
+1. Keep the bounded recursive named-LAMBDA design. Do not build a parallel
+   `REDUCE` implementation or fixed-depth helper grid unless a reproducible
+   recursion-specific failure appears.
+2. Preserve the literal depth cap, `LIMIT` status, and strict progress guard.
+   Before production migration, add or exercise one maximum-depth fixture so
+   the cap itself is verified in native Excel; this is a rollout test, not a
+   reason to change the formula now.
+3. If the feature is retained, pilot it first on Master in a fresh production
+   copy. Verify normal input, deletion, conflict recovery, full regression, and
+   save/close/reopen before touching `Sudoku/sudoku.xlsx`. Then migrate Expert,
+   Hard, Medium, and Easy one at a time, verifying each engine's candidates and
+   Coach output instead of copying all five at once. The 27 names remain shared;
+   each engine should add only its own anchor, projection, and Coach connection.
+4. Cut the multi-step candidate chain instead of forcing a second architecture
+   if the pilot produces `#NUM!`/formula errors, save/reopen inconsistency,
+   incorrect recovery, or normal interactive delay/resource use that blocks
+   play. The fallback is the existing single-step `SDK_PlayerHint`/
+   `SDK_PlayerTrace` path, not an unverified fixed-depth clone.
+5. Keep malformed direct-candidate validation deferred. Arbitrary matrices are
+   reachable only through the internal test seam, not the board-driven path.
+   Production remains unchanged and still requires separate rollout approval.
+
+### Overall progress and next bounded round
+
+- Functional prototype work is complete enough for a migration pilot: all
+  seven structured elimination variants, stop states, replay, and conflict
+  recovery have persistent native coverage. Architecture is now decided.
+- Coverage/migration status: **7/7 structured strategies**, saved suite
+  **130 PASS / 0 FAIL / 18 SKIP**, **1/5 prototype engines connected**, and
+  **0/5 production engines migrated**.
+- Next, prepare the exact one-engine production-copy pilot change list and a
+  maximum-depth native fixture. Do not edit production yet. After that bounded
+  design/test round, request explicit approval for the fresh-copy pilot.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
