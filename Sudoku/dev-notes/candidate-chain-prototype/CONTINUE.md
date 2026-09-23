@@ -2356,6 +2356,59 @@ the two policies in tests.
   and Coach connection. Repeat the native suite, correct/wrong-entry
   recovery, save/reopen, and semantic package checks before Easy.
 
+## 2026-09-24 production Medium migration
+
+- Started from committed Hard migration `457d16d`; production SHA-256 was
+  `f48a4e466ae39f168c2daa9a2e947189f1693936eda437107b62f868f46fde70`.
+  Medium still used `SDK_Candidates`, `SDK_PlayerHint`, and
+  `SDK_PlayerTrace`. Its clean board had 36 givens, blank `C5` and `G5`,
+  `AS11 = "Off"`, and native regression **131 PASS / 0 FAIL / 18 SKIP**.
+- Updated `_Tests!B145,D145` to require the Medium chain Coach/fallback path
+  alongside Hard, Expert, and Master; Easy retains its standard wrapper.
+  The assertion first returned `FALSE` / `FAIL`, then passed after Medium
+  was connected.
+- Added `_Engine Medium!L101` label and
+  `L102 = SDKP_Chain($B$3:$J$11,8)`. The clean chain returned
+  `ASSIGNMENT`, step `0`, Naked Single `R1C2 = 3`. Connected all 81
+  `B15:J23` candidate projections; native comparison found zero value or
+  formula mismatches. Connected Coach `B88:B90` using the established
+  chain/fallback pattern with Medium-specific `AS11`. Full suite returned
+  **131 PASS / 0 FAIL / 18 SKIP**.
+- Correct `02 Medium!G5 = 3` produced zero conflicts and advanced Coach to
+  Naked Single `R1C3 = 5`. Deleting it restored exact clean visible/engine
+  fingerprints `8f9b3720` / `77602cf7`. Wrong `C5 = 6` produced three
+  conflict flags, chain `CONTRADICTION` at step `0`, and blank Coach.
+  Clearing it restored both fingerprints and original `R1C2 = 3` guidance.
+  The native suite's puzzle-fixture checks temporarily failed during those
+  intentional test inputs and returned to **131/0/18** on clearing.
+- Saved, closed, and reopened production through Excel. Reopened native
+  suite stayed **131/0/18**; Medium guidance, blank temporary inputs,
+  `Off` mode, both fingerprints, and Hard/Expert/Master guidance persisted.
+  Error search found only the three intentional `#N/A` text examples on
+  Formula Reference. Excel requested another save on final close; saved
+  and closed, then audited the final file.
+- Against `457d16d`, offline semantic comparison found exactly **85**
+  changed Medium formulas (81 projections, three Coach cells, one anchor),
+  one new label, two changed `_Tests!145` cells, and new Medium chain
+  spill/cache values within `L102:T111`. No values or styles changed
+  outside those approved ranges. Sheet order, all 78 workbook names,
+  calculation settings, ZIP integrity, and 40-part package inventory were
+  unchanged. Final cached status/Coach, `E145 = PASS`, blank test inputs,
+  and `Off` mode were read back.
+- Final production SHA-256:
+  `2e0106452aa8c4b64a03b211f44280582bb546811dd3c378305a444e375d3d96`.
+
+### Overall progress and next bounded round
+
+- Candidate-chain strategy coverage remains **7/7**. Production now has
+  **4/5 engines connected**: Master, Expert, Hard, and Medium. Easy alone
+  retains its original engine formulas.
+- Next, migrate Easy alone. Update the shared Coach-path assertion first
+  and watch it fail, then add only Easy's anchor, 81 projections, and
+  Coach connection. Repeat native suite, correct/wrong-entry recovery,
+  save/reopen, and semantic package checks. Do not extend scope unless
+  that bounded round reveals a specific defect.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
