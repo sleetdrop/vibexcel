@@ -2208,6 +2208,52 @@ the two policies in tests.
   same native and save/reopen checks, consider Expert, Hard, Medium, and Easy
   one at a time. Do not edit production merely because the pilot passed.
 
+## 2026-09-23 production Master migration
+
+- The user approved migrating Master in `Sudoku/sudoku.xlsx`. The starting
+  production file matched SHA-256
+  `f69c6b84f19eb46334167b1729cee1e844e225eaf3a150b00a58eb1d7272125a`;
+  the previously verified production-copy pilot was the exact source.
+- Updated the Master Coach-path assertion and added `_Tests!A164:E202` before
+  installing names. The new tests initially failed, as did `_Tests!E145`.
+  Installed 27 workbook-scoped `SDKP_` names in three batches and read back
+  every definition; all matched the pilot. After names but before Master
+  connection, the suite reported **130 PASS, 1 FAIL, 18 SKIP**. The sole
+  remaining failure was the intentionally unconnected Master Coach path.
+- Connected only `_Engine Master`: `L101` label, `L102` bounded chain anchor,
+  81 projection formulas in `B15:J23`, and Coach formulas in `B88:B90`.
+  Live comparison found zero projection mismatches. Final Excel-native suite:
+  **131 PASS, 0 FAIL, 18 SKIP**, including the eight-step boundary at row 202.
+- Correct `05 Master!K26 = 1` gave `STABLE`, no conflicts, and the documented
+  Coach fallback. Deleting it restored the exact clean visible and engine
+  fingerprints, `4314140c` and `f550696c`. Wrong `C8 = 1` gave exactly
+  `R1C1`/`R2C1` conflicts, `CONTRADICTION`, and blank Coach output. Clearing
+  it restored the same fingerprints. All six temporary inputs are blank and
+  `AS11 = "Off"`.
+- Saved, closed, and reopened the same production file. The 27 names,
+  **131/0/18** regression result, clean `ASSIGNMENT` at step 0 with Hidden
+  Single `R8C3 = 1`, Coach output, and both fingerprints persisted. The
+  post-reopen error search found only three intentional `#N/A` text examples
+  on Formula Reference. The workbook was saved and closed again.
+- ZIP integrity and cached-result checks passed. Against the original Git
+  version, semantic differences are exactly 27 added names, **85** formula
+  cells on `_Engine Master`, and **95** on `_Tests`. The changed target cells
+  match the pilot in formulas, values, and styles. No cell value or style
+  changed outside the approved ranges; sheet structure and calculation
+  settings are unchanged. Excel added the same three ChatGPT add-in
+  `xl/webextensions` parts observed in the pilot.
+- Final production SHA-256:
+  `7e860fd66a36c843207fb63fcf49e67ac35150c1fd54d89a24ed74612f790cc6`.
+
+### Overall progress and next bounded round
+
+- Candidate-chain strategy coverage remains **7/7**. The production workbook
+  now has **1/5 engines connected**: Master. Expert, Hard, Medium, and Easy
+  retain their prior formulas and are still **0/4 migrated**.
+- Next, migrate Expert as a separate bounded round. The shared 27 names and
+  tests are already present; add only Expert's anchor, projection, and Coach
+  connection, then repeat its native interaction and save/reopen checks.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
