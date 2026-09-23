@@ -2254,6 +2254,58 @@ the two policies in tests.
   tests are already present; add only Expert's anchor, projection, and Coach
   connection, then repeat its native interaction and save/reopen checks.
 
+## 2026-09-23 production Expert migration
+
+- Started from committed Master migration `efb211d`; production SHA-256 was
+  `7e860fd66a36c843207fb63fcf49e67ac35150c1fd54d89a24ed74612f790cc6`.
+  Expert retained the original `SDK_Candidates` grid and `SDK_PlayerHint` /
+  `SDK_PlayerTrace` Coach. Its clean board had 27 givens, blank `C5` and
+  `AE14`, `AS11 = "Off"`, and native suite **131 PASS / 0 FAIL / 18 SKIP**.
+- Updated `_Tests!A145,B145,D145` to require the Expert and Master chain
+  Coach/fallback paths while Easy, Medium, and Hard retain their standard
+  wrappers. The assertion first returned `FALSE` / `FAIL`, then passed after
+  Expert was connected.
+- Added `_Engine Expert!L101` label and `L102 = SDKP_Chain($B$3:$J$11,8)`.
+  The clean chain returned `ASSIGNMENT`, step `0`, Hidden Single
+  `R4C8 = 2`. Connected all 81 `B15:J23` candidate projections to the
+  chain matrix; native comparison found zero value or formula mismatches.
+  Connected Coach `B88:B90` using the verified Master pattern with the
+  Expert-specific `AS11` reference. Full suite returned **131 PASS,
+  0 FAIL, 18 SKIP**.
+- Correct `04 Expert!AE14 = 2` produced zero conflicts and advanced the
+  Coach to Hidden Single `R4C7 = 9`. Deleting it restored exact clean
+  visible/engine fingerprints `15785580` / `6a9a77ca`. Wrong `C5 = 3`
+  duplicated the given `G5 = 3`: exactly two conflict flags, chain
+  `CONTRADICTION` at step `0`, and blank Coach. Clearing it again restored
+  both fingerprints and the original `R4C8 = 2` guidance.
+- Saved through the connected Excel session, closed, and reopened production.
+  Reopened native suite remained **131/0/18**; Expert guidance, blank
+  temporary inputs, `Off` mode, both fingerprints, and Master guidance
+  persisted. Workbook error search found only the three intentional `#N/A`
+  text examples on Formula Reference.
+- Offline semantic comparison against `efb211d` found exactly **85** changed
+  Expert formulas (81 projections, three Coach cells, one anchor), three
+  changed `_Tests!145` cells, and 90 new chain spill/cache cells within
+  Expert `L102:T111`. No values or styles changed outside those approved
+  ranges. Sheet order, all 78 workbook names, calculation settings, ZIP
+  integrity, and package part count were unchanged. The 33 style differences
+  were confined to newly materialized Expert spill cells.
+- Excel requested a save on the final close after the read-only reopen.
+  Saved, closed, and repeated the semantic package audit; it remained
+  unchanged with zero out-of-scope cell or style differences.
+- Final production SHA-256:
+  `b4bc524134e1007f1f40f34f5035776aa9eb1557421c96ed55c214b9dd60125f`.
+
+### Overall progress and next bounded round
+
+- Candidate-chain strategy coverage remains **7/7**. Production now has
+  **2/5 engines connected**: Master and Expert. Hard, Medium, and Easy
+  retain their original engine formulas.
+- Next, migrate Hard alone. Update the shared Coach-path assertion first
+  and watch it fail, then add only Hard's anchor, 81 projections, and
+  Coach connection. Repeat native suite, correct/wrong-entry recovery,
+  save/reopen, and semantic package checks before considering Medium.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
