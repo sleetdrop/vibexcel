@@ -2114,6 +2114,47 @@ the two policies in tests.
   maximum-depth native fixture. Do not edit production yet. After that bounded
   design/test round, request explicit approval for the fresh-copy pilot.
 
+## 2026-09-23 maximum-depth contract and pilot plan checkpoint
+
+- Continued only in the independent structured-slice prototype. Added native
+  `_Tests!202`, whose synthetic candidate matrix contains nine independent
+  Pointing-row patterns. `SDKP_ChainLoop(...,8)` returns `LIMIT` after exactly
+  eight applied eliminations, preserves the ninth as the pending hint, leaves
+  its target candidates unchanged, and records eight log entries.
+- The case passed against the existing formula implementation; no workbook
+  name or engine formula required a change. Its sensitivity was checked by
+  changing only the test call limit from 8 to 7: the result became `FALSE`/
+  `FAIL`. Restoring 8 returned `TRUE`/`PASS`. This protects the literal depth
+  contract rather than merely checking for a non-error result.
+- Full Excel-native regression after restoration: **131 PASS, 0 FAIL,
+  18 SKIP**. Saved through the connected Excel session using Microsoft's
+  documented `Workbook.save(Excel.SaveBehavior.save)` API. ZIP integrity
+  passed, and offline package readback confirmed the row-202 formula uses
+  limit 8 with cached `TRUE`/`PASS`. Prototype SHA-256:
+  `72d149befad45466a869d3c93b6dd4c9f2cb177a0e14d24d8ce143b704f45d5c`.
+- Production was not opened or edited and retained SHA-256
+  `f69c6b84f19eb46334167b1729cee1e844e225eaf3a150b00a58eb1d7272125a`.
+- A read-only package comparison against production confirmed the exact pilot
+  surface: 27 added `SDKP_` names and zero changed pre-existing names; 85
+  changed formulas on `_Engine Master` (81 candidate projections, three Coach
+  cells, and one chain anchor); and 95 changed formulas on `_Tests` after the
+  new boundary case. No other engine has a formula difference.
+- Wrote the executable pilot checklist to `MASTER-PILOT.md`. It fixes the
+  source/target hashes, all 27 names, exact ranges, invariants, phased native
+  acceptance sequence, save/reopen checks, and stop/cut conditions. It keeps
+  performance stress out of scope unless normal interaction is blocked.
+
+### Overall progress and next bounded round
+
+- Architecture and maximum-depth behavior are now covered: **7/7 structured
+  strategies**, **131 PASS / 0 FAIL / 18 SKIP**, **1/5 prototype engines
+  connected**, and **0/5 production engines migrated**.
+- The next bounded round is the one-engine Master pilot in a fresh byte-identical
+  copy of production, following `MASTER-PILOT.md`. The original production file
+  remains out of scope. Run the phased install, normal-use recovery checks, and
+  save/close/reopen verification, then make the keep/cut recommendation before
+  requesting any production edit.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
