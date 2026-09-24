@@ -1,4 +1,4 @@
-# Round 07 — Save, reopen, and reset (in progress)
+# Round 07 — Save, reopen, and reset (complete)
 
 Date: 2026-09-24. Base: `main` at `5ec0335`. Production `Sudoku/sudoku.xlsx` SHA-256 `1de172cba70d6d784eaa3ac77280d40d272bd0f86a9ffa4f863d9eb14d80e852`. Tested a fresh byte-identical copy in Microsoft Excel 365 for macOS: `/private/tmp/sudoku-review-round7-persistence-20260924/sudoku-persistence.xlsx`. A clean Excel-saved `baseline.xlsx` was preserved before player input.
 
@@ -12,6 +12,8 @@ Saved, closed, and reopened the in-progress copy in native Excel. The screen sti
 
 Selected editable `K26` in the grid and pressed Delete. Excel changed to zero answers and 58 remaining. Entered `Off` in the Coach selector through the player UI; the guidance cleared. Saved and closed the clean copy, then reopened it. Native Excel showed zero answers, 58 remaining, zero conflicts, Off, and the initial candidate display. The clean saved file had **131 PASS, 0 FAIL, 18 SKIP**. Its cached values matched the Excel-saved baseline at every cell of all 13 sheets. Independent audits passed all **405** candidate squares and protection on all five player pages. A separate fresh reset copy made directly from production was byte-identical to production (same SHA-256).
 
-## Remaining verification
+## Final post-reopen read
 
-The Mac locked just after the clean reopened screen was inspected. A post-reopen save/read of the clean hidden test state is still pending; the saved pre-reopen state passed, but that does not replace the requested post-reopen read. Do not mark R5 complete until Excel is unlocked and this final read is done. Production remains unchanged. Existing untracked candidate-chain experiments were not touched.
+After the Mac was unlocked, the already reopened clean copy was saved again in Excel. The saved `_Tests` still had **131 PASS, 0 FAIL, 18 SKIP**. Every cached cell on all 13 sheets matched the clean pre-reopen save (zero differences). Master `K26` was blank, `AS11` was Off, status showed zero answers, remaining was 58, conflicts were zero, and Coach guidance was blank. No persistence defect was reproduced, so no production workbook or regression formula change was needed. Production SHA-256 remained unchanged. Existing untracked candidate-chain experiments were not touched.
+
+R1–R5 and F1 are complete; R6 remains open. Next bounded round: hidden regression and release contracts, including on-demand uniqueness and solver checks where resource use allows, formula-error and validation inspection, and reconciliation of workbook README counts against the saved workbook.
