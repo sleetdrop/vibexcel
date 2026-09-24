@@ -132,7 +132,7 @@ Formula-only design creates useful constraints rather than hiding them:
 
 - formulas cannot directly clear a user's input cell;
 - the Verify dropdown cannot reset itself, so the player returns it to Off;
-- fixed clues use data validation rather than protected or scripted controls;
+- fixed clues use data validation rather than protected or scripted controls, so Excel's Delete key can clear a clue; this is a confirmed functional-review defect;
 - the finite Coach strategy set sometimes requires a transparent reveal;
 - recursive solving and uniqueness certification are substantially heavier than local candidate checks;
 - compatibility depends on modern Excel dynamic-array and LAMBDA behavior.
