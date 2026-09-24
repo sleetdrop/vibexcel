@@ -51,7 +51,7 @@ Isolation costs some worksheet duplication, but it keeps dependencies explicit a
 
 ## Candidate and Validation Layer
 
-`SDK_Candidates(board, row, column)` computes legal digits for a single empty cell using row, column, and 3×3 box exclusion. `SDK_CandidateMatrix(board)` applies that calculation across the full 9×9 board so downstream functions share one deterministic candidate representation.
+`SDK_Candidates(board, row, column)` computes legal digits for a single empty cell using row, column, and 3×3 box exclusion. `SDK_CandidateMatrix(board)` applies that calculation across the full 9×9 board. In the current workbook, all five engines also run `SDKP_Chain(board, 8)` and project its candidate matrix onto the player pages.
 
 Validation operates at several levels:
 
@@ -74,7 +74,7 @@ The Coach selects the simplest supported step in a fixed order:
 6. claiming reduction;
 7. naked pair.
 
-`SDK_CoachHintV2` produces a concise next step. `SDK_CoachTraceV2` separates the detected pattern from the required action so the explanation layer does not become coupled to the board renderer.
+The current Coach path reads the bounded `SDKP_Chain` result in each engine. An assignment supplies the hint; the engine formats the same result as a concise Hint or a two-line Trace. The older `SDK_CoachHintV2` and `SDK_CoachTraceV2` functions remain defined, but the five player pages use the chain-connected engine cells.
 
 Strategy functions return a step only when it creates a real assignment or elimination. Synthetic candidate fixtures in `_Tests` exercise structural cases that are awkward to guarantee on the five published starting boards.
 
@@ -82,7 +82,7 @@ Strategy functions return a step only when it creates a real assignment or elimi
 
 The supported logical strategy set is intentionally finite. A hard puzzle can reach a valid state where none of those techniques yields the next move.
 
-`SDK_PlayerHint(board, solution)` uses the logical pipeline first. Only for the exact “no supported step” result does it invoke `SDK_FallbackReveal`, which selects a valid empty square from the stored certified solution. `SDK_PlayerTrace` formats the same result as a two-line Technique/Action response.
+When the chain finds no supported assignment or elimination, the engine calls `SDK_FallbackReveal`, which selects a valid empty square from the stored certified solution. A chain limit or contradiction is reported explicitly instead of being presented as a logical deduction or a certified reveal.
 
 The fallback contract is deliberately explicit:
 
@@ -124,7 +124,7 @@ The hidden `_Tests` worksheet combines known puzzle states with synthetic fixtur
 - five-page startup state and engine wiring;
 - release visual gates that formulas cannot directly inspect.
 
-The v1.0.0 release state contains **79 passing checks and 18 on-demand or visual checks**, with no failures while Verify is Off. The public README reports these counts directly from `_Tests` formulas.
+The current workbook retains version **1.0.0** and contains **131 passing checks and 18 on-demand or visual checks**, with no failures while Verify is Off (checked 2026-09-24). The workbook's `README` sheet reports these counts directly from `_Tests` formulas.
 
 ## Formula-Only Interaction Limits
 

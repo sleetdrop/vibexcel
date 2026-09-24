@@ -12,7 +12,7 @@ The workbook was developed through collaboration between an AI agent and Excel's
 
 ## Why This Is Interesting
 
-The visible game pages contain very little calculation logic. Five isolated hidden engines collect player state and call 51 reusable `SDK_*` Named LAMBDA functions for candidates, validation, reasoning, search, certification, and presentation.
+The visible game pages contain very little calculation logic. Five isolated hidden engines collect player state and call 51 reusable `SDK_*` Named LAMBDA functions for validation, search, certification, and presentation. The current candidate and Coach path also uses 27 `SDKP_*` candidate-chain helpers.
 
 The workbook also carries its own documentation. Its `README` sheet explains how to play, while `Formula Reference` documents the public formula layers and contracts. If the file is shared without this repository, it remains understandable and inspectable on its own.
 
@@ -67,7 +67,7 @@ The hidden sheets remain ordinary inspectable worksheets; hiding keeps the playe
 
 Read [Formula architecture](FORMULA_ARCHITECTURE.md) for the calculation layers, data flow, Coach pipeline, recursive search boundary, uniqueness certification, and formula-only interaction constraints.
 
-For source review without opening the binary workbook, see the generated [Named LAMBDA snapshot](NAMED_FORMULAS.md). It mirrors all 51 `SDK_*` definitions from the released workbook and records the exact workbook SHA-256.
+For source review without opening the binary workbook, see the generated [Named LAMBDA snapshot](NAMED_FORMULAS.md). It records the 51 `SDK_*` definitions from its source workbook and that workbook's SHA-256; inspect the current workbook for the active `SDKP_*` chain definitions.
 
 ## Compatibility and Performance
 
@@ -81,9 +81,10 @@ Ordinary play uses fast local checks. **Verify** invokes global recursive search
 
 - Version: `1.0.0`
 - Build date: `2026-07-27`
-- Release state: `79 checks passing · 18 on demand`
+- Current workbook baseline: `131 checks passing · 18 on demand` (Coach Off; checked 2026-09-24)
 - Published puzzles certified unique: `5 / 5`
 - Named LAMBDA functions: `51 SDK_*` names
+- Candidate-chain helpers: `27 SDKP_*` names
 - Package hygiene verified: `2026-09-04` (no embedded Office add-in or Web Extension parts)
 
 The on-demand group includes expensive checks and visual contracts that are not continuously evaluated during ordinary play. The workbook opens with empty player entries, Coach Off, zero conflicts, candidates Auto, and every puzzle In Progress.
