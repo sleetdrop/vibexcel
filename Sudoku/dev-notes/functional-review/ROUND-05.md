@@ -1,4 +1,4 @@
-# Round 05 — Coach modes (in progress)
+# Round 05 — Coach modes (complete)
 
 Date: 2026-09-24. Base: `main` at `6fd70e1`, pushed to `origin/main` after a successful fetch and fast-forward check (`d88e72c..6fd70e1`). Production workbook SHA-256 `1de172cba70d6d784eaa3ac77280d40d272bd0f86a9ffa4f863d9eb14d80e852`. Testing began in a fresh byte-identical copy, `/private/tmp/sudoku-review-round5-coach-20260924/sudoku-coach.xlsx`, connected to Microsoft Excel 365 for macOS. Production was not opened for editing.
 
@@ -22,8 +22,15 @@ An independent read-only check of the saved production board found every target 
 - Easy `S17=5` advanced Hint to Naked single `R5C2=2`; duplicate `K5=5` produced two conflicts and the explicit conflict guidance. Reset returned to clean status and Off.
 - Medium `G5=3` advanced Hint to Naked single `R1C3=5`; duplicate `C5=6` produced three conflicts and explicit conflict guidance. Reset command succeeded.
 
-## Interruption and remaining work
+## Resume after the Mac was unlocked
 
-The Mac locked during the round. The connected Excel session continued through the mode cycles and the changed-board checks above, but the Hard correct/error command timed out, its follow-up state read also timed out, and the Excel session then disappeared. The Hard state after that command is unknown. Expert changed-board behavior, UI marker colors/roles, and this round's save/reopen and regression readback are not yet verified. Do not interpret the transport timeout as a formula defect or mark R3 complete. The current temporary copy may contain unsaved changes; use a **new** production copy after the Mac is unlocked to finish the remaining checks.
+The interrupted copy was closed without saving. A new byte-identical production copy, `/private/tmp/sudoku-review-round5-coach-resume-20260924/sudoku-coach-resume.xlsx`, was opened in native Excel. This avoids drawing conclusions from the timed-out command's unknown state.
 
-Overall, R1, R2, and F1 remain complete; R3 is in progress; R4–R6 remain open. Existing untracked candidate-chain experiments were not touched.
+- Hard: correct `K23=6` gave `IN PROGRESS · 1 answers entered`, 52 remaining, zero conflicts, and a Naked single Hint `R8C1 = 8`. Duplicate `C5=9` gave `CONFLICT · 2 answers entered`, 51 remaining, three conflicts, and `Resolve the conflict before using Coach.` Clearing both and selecting Off restored 53 remaining, zero conflicts, and blank guidance.
+- Expert: correct `AE14=2` gave `IN PROGRESS · 1 answers entered`, 53 remaining, zero conflicts, and a Hidden single in row Hint `R4C7 = 9`. Duplicate `C5=3` gave `CONFLICT · 2 answers entered`, 52 remaining, two conflicts, and the same explicit block. Clearing both and selecting Off restored 54 remaining, zero conflicts, and blank guidance.
+- On clean Hint in each difficulty, a scan of the 81 grid corner cells found exactly one `●` source glyph and no `▼` target or `✖` conflict glyph: Easy R5C5, Medium R1C2, Hard R7C3, Expert R4C8, Master R8C3. Native Excel showed the Master glyph and Coach text together. The hidden coordinate-role tests cover source and target parsing, including the `▼` target for a pointing elimination; the current clean player boards did not display an elimination target.
+- On Master, entered six correct values used by the reachable advanced fixture: `K26=1`, `G5=6`, `K8=4`, `K17=3`, `K23=6`, `C8=5`. The current chain-connected player Hint was instead `Hidden single in column · R6C7 = 1`, with one `●` at that source and no target glyph. The older `_Tests` player-trace fixture uses a separate reasoning function and therefore is not evidence that the published chain must show pointing at that exact state. Replacing editable `G5` with duplicate `5` produced two visible `✖` conflict glyphs, zero source/target glyphs, and the explicit conflict message; native Excel showed the same state. An attempted edit of the fixed clue `C5` was rejected by worksheet protection, as intended.
+
+All six Master entries were cleared and all five modes set to Off. A live read showed zero answers, zero conflicts, blank Coach guidance, and remaining counts 51/45/53/54/58. The fresh copy was saved, closed, and reopened in Excel. Its saved visible cell values match production on all five player sheets (zero differences). The saved hidden suite has **131 PASS, 0 FAIL, 18 SKIP**. The independent candidate audit passed all **405** squares, and the protection audit passed all five pages. Production SHA-256 remained `1de172cba70d6d784eaa3ac77280d40d272bd0f86a9ffa4f863d9eb14d80e852`.
+
+No formula defect was reproduced, so no production workbook change or new regression formula was warranted. R1, R2, F1, and R3 are complete; R4–R6 remain open. Next bounded round: R4 cross-sheet isolation, comparing visible pages and their matching engine caches before and after edits on two source difficulties. Existing untracked candidate-chain experiments were not touched.
