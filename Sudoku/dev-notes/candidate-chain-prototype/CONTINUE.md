@@ -2409,6 +2409,49 @@ the two policies in tests.
   save/reopen, and semantic package checks. Do not extend scope unless
   that bounded round reveals a specific defect.
 
+## 2026-09-24 production Easy migration
+
+- Started from `1e3c6ae` and production SHA-256
+  `2e0106452aa8c4b64a03b211f44280582bb546811dd3c378305a444e375d3d96`.
+  Clean Easy had 30 givens, blank `K5`/`S17`, `AS11 = "Off"`, Coach
+  Naked Single `R5C5 = 5`, and **131 PASS / 0 FAIL / 18 SKIP**.
+- Changed `_Tests!B145,D145` to require the chain Coach/fallback contract
+  on all five engines; it returned `FALSE` / `FAIL` before Easy changed.
+  Added `_Engine!L101` label, `L102 = SDKP_Chain($B$3:$J$11,8)`, all 81
+  `B15:J23` candidate projections, and Coach `B88:B90`. Projections
+  matched the chain matrix with zero value/formula mismatches. The test
+  turned `TRUE` / `PASS`; the full clean suite returned **131/0/18**.
+- Correct `01 Easy!S17 = 5` advanced Coach to Naked Single `R5C2 = 2`
+  with zero conflicts. Deleting it restored visible/engine fingerprints
+  `e6a300bc` / `eef20dd9`. Wrong `K5 = 5` produced two conflicts, chain
+  `CONTRADICTION` at step `0`, and blank Coach; clearing it restored both
+  fingerprints and the original guidance. Intentional entries temporarily
+  changed fixture-test results; clearing restored **131/0/18**.
+- Saved through Excel, then closed and reopened after the Mac was
+  unlocked. Reopened suite stayed **131/0/18**; Easy guidance, blank
+  temporary inputs, `Off` mode, both fingerprints, and Medium/Hard/
+  Expert/Master guidance persisted. Reopened error search found only
+  three intentional `#N/A` text examples on Formula Reference. Excel
+  requested another save on final close; saved and closed.
+- Final offline comparison against `1e3c6ae` found only expected
+  Easy and `_Tests!145` cell changes: 85 changed formulas, one label,
+  two test cells, and Easy spill/cache within `L102:T111`; the 91 style
+  changes were confined to the new label/anchor/spill. Sheet order,
+  78 names, calculation settings, ZIP integrity, and 40 package parts
+  were unchanged. Cached `E145 = PASS`, Easy guidance, blank test inputs,
+  and other four Coach outputs were read back. Final production SHA-256:
+  `ca7457b4ce35792b63fa33b324f77d2871c7eddb0d66fafe303d0c5d66beb637`.
+
+### Overall progress and next bounded review
+
+- Candidate-chain strategy coverage remains **7/7**. Production now has
+  **5/5 engines connected**: Easy, Medium, Hard, Expert, and Master.
+  This completes the per-difficulty production migration, not the
+  broader functional-correctness review of the entire workbook.
+- No further difficulty migration is queued. A later round can review
+  cross-sheet user workflows and correctness end to end; performance
+  work remains deferred unless it directly affects use or resource limits.
+
 ## Tool pitfalls from earlier successful rounds
 
 - Offline formula snapshots contain `_xlws.FILTER`. Office.js input requires
