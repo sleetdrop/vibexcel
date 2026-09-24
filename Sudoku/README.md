@@ -38,7 +38,7 @@ The workbook also carries its own documentation. Its `README` sheet explains how
 5. Press Delete or Backspace to clear an answer.
 6. Watch candidates, remaining cells, conflicts, and game status update automatically.
 
-Gray centers contain the fixed clues. Data validation rejects ordinary replacement edits, but Excel's Delete key can still clear a gray clue; if that happens, reopen a clean copy of the workbook. Fixed-clue protection is an open issue in the functional review.
+Gray centers contain fixed clues and are protected from accidental clearing. Green-underlined centers and the Coach mode selector remain editable.
 
 To reset a puzzle, delete entries from its green-underlined centers or reopen a clean copy of the workbook.
 

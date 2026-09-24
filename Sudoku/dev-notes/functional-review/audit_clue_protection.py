@@ -26,11 +26,14 @@ def audit(path):
             failures.append(f"{name}: sheet protection is off")
         locked_inputs = []
         unlocked_clues = []
+        allowed_unlocked = {cell.coordinate for row in sheet["AS11:AZ11"] for cell in row}
         for row in range(9):
             for col in range(9):
                 cell = sheet.cell(5 + 3 * row, 3 + 4 * col)
                 if cell.value is None and cell.protection.locked:
                     locked_inputs.append(cell.coordinate)
+                elif cell.value is None:
+                    allowed_unlocked.add(cell.coordinate)
                 elif cell.value is not None and not cell.protection.locked:
                     unlocked_clues.append(cell.coordinate)
         if locked_inputs:
@@ -39,6 +42,13 @@ def audit(path):
             failures.append(f"{name}: {len(unlocked_clues)} fixed clues are unlocked (for example {unlocked_clues[0]})")
         if sheet["AS11"].protection.locked:
             failures.append(f"{name}: Coach mode AS11 remains locked")
+        extra_unlocked = [
+            cell.coordinate
+            for cell in sheet._cells.values()
+            if not cell.protection.locked and cell.coordinate not in allowed_unlocked
+        ]
+        if extra_unlocked:
+            failures.append(f"{name}: {len(extra_unlocked)} unexpected cells are unlocked (for example {extra_unlocked[0]})")
     workbook.close()
     for failure in failures:
         print(f"FAIL {failure}")
